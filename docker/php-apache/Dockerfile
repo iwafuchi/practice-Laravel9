@@ -16,4 +16,4 @@ RUN apt-get update && \
     cp /etc/apache2/mods-available/headers.load /etc/apache2/mods-enabled/ && \
     curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/lists/*
