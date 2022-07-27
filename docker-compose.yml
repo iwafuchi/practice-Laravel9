@@ -27,7 +27,6 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./docker/php-apache/php/php.ini:/usr/local/etc/php/php.ini
-      - ./docker/php-apache/apache/apache2.conf:/etc/apache2/apache2.conf
       - ./docker/php-apache/apache/security.conf:/etc/apache2/conf-available/security.conf
     ports:
       - "80:80"
