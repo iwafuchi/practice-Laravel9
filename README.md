@@ -9,6 +9,10 @@ chown -R myusername:mygroupname task_test
 ## 権限変更
 chmod -R 777 storage
 
+## debuger install
+composer require barryvdh/laravel-debugbar
+Switch modes with APP_DEBUG in .env
+
 ## Breeze install
 composer require laravel/breeze --dev<br>
 php artisan breeze:install<br>
@@ -25,6 +29,10 @@ php artisan lang:add ja
 
 ## Update locales
 php artisan lang:update
+
+## config and cache clear command
+php artisan config:clear
+php artisan cache:clear
 
 ## 参考資料
 https://readouble.com/laravel/9.x/ja/releases.html<br>
