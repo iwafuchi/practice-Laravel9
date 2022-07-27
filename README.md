@@ -1,7 +1,7 @@
 # 作業メモ
 
 ## Laravel install
-composer create-project laravel/laravel task_test --prefer-dist "9.*"
+composer create-project laravel/laravel marche "9.*" --prefer-dist
 
 ## 所有者:グループの変更
 chown -R myusername:mygroupname task_test
