@@ -4,10 +4,13 @@
 composer create-project laravel/laravel marche "9.*" --prefer-dist
 
 ## 所有者:グループの変更
-chown -R myusername:mygroupname task_test
+chown -R myusername:mygroupname marche
 
 ## 権限変更
 chmod -R 777 storage
+
+## 所有者変更
+chown -R www-data:www-data storage
 
 ## debuger install
 composer require barryvdh/laravel-debugbar
