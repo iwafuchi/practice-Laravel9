@@ -17,6 +17,7 @@
         <header>
             {{ $header }}
         </header>
+        <span>{{ $span }}</span>
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>
