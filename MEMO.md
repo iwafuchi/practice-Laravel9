@@ -13,11 +13,18 @@ sec02_componentPreparation
 フォルダを作成しない場合
 resouces/views/yourComponents
 
-<x-yourComponents><x-yourComponents>
+<x-yourComponents></x-yourComponents>
 ```
 ```
 フォルダを作成する場合
 resouces/views/components/yourFolder/yourComponents
 
-<x-yourFolder.yourComponents><x-yourFolder.yourComponents>
+<x-yourFolder.yourComponents></x-yourFolder.yourComponents>
+```
+
+### 名前付きスロット
+```
+<x-youorFolder.yourComponents>
+    <x-slot name="variable">value</x-slot>
+</x-youorFolder.yourComponents>
 ```
