@@ -19,6 +19,14 @@ php artisan make:controller yourContoroller
 ### componentsの作成場所とタグの記述方法
 
 ```php
+//コンポーネントを作成する コンポーネント名はアッパーキャメルケースで指定する
+php artisan make:component YourComponent
+```
+これらのファイルが作成される
+- resources/views/components/select-box.blade.php … コンポーネントのビューを記述するBlade
+- app/Views/Components/SelectBox.php … コンポーネントのロジックを処理するビハインドコード。
+
+```
 フォルダを作成しない場合
 resouces/views/yourComponents
 
@@ -78,4 +86,47 @@ blade で設定しなかった変数は@props の値が使用される。<br>
 
 //components
 <div {{ $attributes->merge(['class' => 'border-2 shadow-md w-1/4 p-2']) }}</div>
+```
+
+### クラスベースのコンポーネント
+``` php
+php artisan make:component TestClassBase
+//components
+public function render() {
+    return view('components.test-class-base-component');
+}
+//layout
+<x-test-class-base></x-test-class-base>
+```
+
+### クラスベースコンポーネントで属性を設定する
+``` php
+//app/views/componenta
+class TestClassBase extends Component {
+    public $classBaseMessage;
+    /**
+     * Create a new component instance.
+     *
+     * @return void
+     */
+    public function __construct($classBaseMessage) {
+        //
+        $this->classBaseMessage = $classBaseMessage;
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     *
+     * @return \Illuminate\Contracts\View\View|\Closure|string
+     */
+    public function render() {
+        return view('components.tests.test-class-base-component');
+    }
+}
+
+//resoucrces//views/layout
+<x-test-class-base classBaseMessage="メッセージ"></x-test-class-base>
+
+//componentsの引数とlayoutの属性の変数名が同一である必要がある
+//cacheが残って画面が更新されない場合はphp artisan view:clear
 ```
