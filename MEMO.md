@@ -6,7 +6,7 @@
 
 ## controller の作成
 
-```
+``` php
 php artisan make:controller yourContoroller
 ```
 
@@ -21,19 +21,22 @@ php artisan make:controller yourContoroller
 ```php
 //コンポーネントを作成する コンポーネント名はアッパーキャメルケースで指定する
 php artisan make:component YourComponent
+
 ```
+
 これらのファイルが作成される
+
 - resources/views/components/select-box.blade.php … コンポーネントのビューを記述するBlade
 - app/Views/Components/SelectBox.php … コンポーネントのロジックを処理するビハインドコード。
 
-```
+``` php
 フォルダを作成しない場合
 resouces/views/yourComponents
 
 <x-yourComponents></x-yourComponents>
 ```
 
-```php
+``` php
 フォルダを作成する場合
 resouces/views/components/yourFolder/yourComponents
 
@@ -76,11 +79,12 @@ public function showComponent1() {
 
 ```
 
-blade で設定しなかった変数は@props の値が使用される。<br>
+blade で設定しなかった変数は@props の値が使用される。  
 @props を設定する際は component 内の全ての変数の初期値を持つ必要がある
 
 ### componentのcssを変更する
-```php
+
+``` php
 //layout
 <x-tests.card title="CSSを変更" class="bg-red-300"></x-tests.card>
 
@@ -89,6 +93,7 @@ blade で設定しなかった変数は@props の値が使用される。<br>
 ```
 
 ### クラスベースのコンポーネント
+
 ``` php
 php artisan make:component TestClassBase
 //components
@@ -100,6 +105,7 @@ public function render() {
 ```
 
 ### クラスベースコンポーネントで属性を設定する
+
 ``` php
 //app/views/componenta
 class TestClassBase extends Component {
@@ -129,4 +135,39 @@ class TestClassBase extends Component {
 
 //componentsの引数とlayoutの属性の変数名が同一である必要がある
 //cacheが残って画面が更新されない場合はphp artisan view:clear
+```
+
+## サービスコンテナについて
+
+簡単に説明するとClassをインスタンス化してくれる機能  
+依存関係を自動的に解決してくれるのでコードが簡潔に書ける  
+
+``` php
+// MessageClass
+Class Message(){
+    public function send($text){
+        echo $text;
+    }
+}
+// UserClass
+Class User(){
+    public $userName = "user";
+    public $message;
+    public function __construct(Message $message) {
+        $this->message = $message;
+    }
+    public function send($text){
+        $this->message->send($this->userName,$text);
+    }
+}
+//UserClassはMessageClassに依存している状態
+//サービスコンテナを使用しない書き方
+$message = new Message();
+$user = new User($message);
+$user->send("サービスコンテナを使用していません。");
+
+//サービスコンテナを使用した書き方
+app()->bind('user', User::class);
+$user = app()->make('user');
+$user->run("サービスコンテナを使用しています。");
 ```
