@@ -172,3 +172,48 @@ app()->bind('user', User::class);
 $user = app()->make('user');
 $user->run("サービスコンテナを使用しています。");
 ```
+
+## サービスプロバイダーについて
+
+config/app.php内のproviders配列で読み込んでいる
+
+``` php
+//providerを作成するコマンド
+php artisan make:provider YourServiceProvider
+
+class SampleServiceProvider extends ServiceProvider {
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register() {
+        //registerメソッドはサービスコンテナにサービスを登録するコードを記述する
+        app()->bind('serviceProviderTest', function () {
+            return 'サービスプロバイダーのテスト';
+        });
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot() {
+        //bootメソッドは全てのサービスプロバイダーが読み込まれた後に実行したいコードを記述する
+    }
+}
+
+//config/app.php
+   'providers' => [
+        //etc...
+        //使用したいプロバイダーを登録する
+        App\Providers\SampleServiceProvider::class,
+    }
+
+//Http/Controller/SampleController.php
+    public function showServiceProviderTest() {
+        $sample = app()->make('serviceProviderTest');
+        dd($sample);
+    }
+```
