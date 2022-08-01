@@ -217,3 +217,60 @@ class SampleServiceProvider extends ServiceProvider {
         dd($sample);
     }
 ```
+
+## php artisan
+
+``` php
+//modelを作成する
+//-mでmigrationも生成される
+php artisan make:model Sample -m
+
+//migrationを作成する
+php artisan make:migration sample_migration_file
+```
+
+## Route
+
+``` php
+    //prefix
+    //prefixを付けることでRouteの設定の際にグループ化できる
+    //admin/users admin/owner admin/etc...
+    //adminから始まるRouteが複数ある際に一纏めに出来る
+    Route::prefix('admin')->group(function () {
+    Route::get('/users', function () {
+        // /admin/usersのURLに一致
+        });
+    });
+
+    //middleware
+    //middlewareとはクライアントからのリクエストがコントローラーのアクションに届く前後に配置されるプログラム
+    //前実行 client → route → middleware → controller → view → client
+    //後実行 client → route → controller → view → middleware → client
+    Route::middleware(['first', 'second'])->group(function () {
+    Route::get('/', function () {
+        // １番目と２番目のミドルウェアを使用
+    });
+
+    Route::get('/user/profile', function () {
+        // １番目と２番目のミドルウェアを使用
+    });
+});
+```
+
+## Guard
+
+Laravel標準の認証機能：リクエストごとにユーザーを認証する方法
+config/auth.phpで設定する
+
+``` php config/auth.php
+    //config/auth.phpのguards配列で定義する
+    'guards' => [
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+    ],
+    //Routeでmiddlewareを呼び出し、指定したGuardで認証されたユーザーだけにアクセスを許可する
+    Route::get('mypage',function(){
+    })->middleware('auth:users');
+```
