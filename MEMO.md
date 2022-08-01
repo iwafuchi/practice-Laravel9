@@ -56,11 +56,12 @@ resouces/views/components/yourFolder/yourComponents
 
 ```php
 //controller
-public function showComponent1() {
-    $name = "Jhon doe";
-    return view('tests.component-test1', compact('name'));
+class ComponentTestController extends Controller {
+    public function showComponent1() {
+        $name = "Jhon doe";
+        return view('tests.component-test1', compact('name'));
+    }
 }
-
 //layout
 <div>{{ $name }}</div>
 
