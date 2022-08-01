@@ -12,6 +12,7 @@ class LifeCycleTestController extends Controller {
         app()->bind('lifeCycleTest', function () {
             return 'ライフサイクルテスト';
         });
+        $make = app()->make('lifeCycleTest');
 
         /**
          * サービスコンテナなしのパターン
@@ -19,7 +20,6 @@ class LifeCycleTestController extends Controller {
          */
         $sample1 = new Sample(new Message());
         $sample1->run('サービスコンテナを使用していません。');
-
         /**
          * サービスコンテナapp()ありのパターン
          * SampleClassはMessageClassに依存していたがサービスコンテナapp()を使用することで自動的に依存関係を解消してくれている。
@@ -28,8 +28,6 @@ class LifeCycleTestController extends Controller {
         $sample2 = app()->make('sample');
         $sample2->run("サービスコンテナを使用しています。");
 
-        $make = app()->make('lifeCycleTest');
-
-        dd($make, $sample2, app());
+        dd($make, $sample1, $sample2, app());
     }
 }
