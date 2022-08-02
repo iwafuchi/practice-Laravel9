@@ -17,7 +17,13 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
+        @if (auth('admins')->user())
+            @include('layouts.admins-navigation')
+        @elseif(auth('owners')->user())
+            @include('layouts.owners-navigation')
+        @elseif(auth('users')->user())
+            @include('layouts.users-navigation')
+        @endif
 
         <!-- Page Heading -->
         <header class="bg-white shadow">

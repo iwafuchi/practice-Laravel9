@@ -17,8 +17,8 @@ class RouteServiceProvider extends ServiceProvider {
      * @var string
      */
     public const HOME = '/dashboard';
-    public const OWNER_HOME = '/owner/dashboard';
-    public const ADMIN_HOME = '/admin/dashboard';
+    public const OWNERS_HOME = '/owners/dashboard';
+    public const ADMINS_HOME = '/admins/dashboard';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -34,17 +34,17 @@ class RouteServiceProvider extends ServiceProvider {
                 ->group(base_path('routes/api.php'));
 
             Route::prefix('/')
-                ->as('user.')
+                ->as('users.')
                 ->middleware('web')
                 ->group(base_path('routes/web.php'));
 
-            Route::prefix('owner')
-                ->as('owner.')
+            Route::prefix('owners')
+                ->as('owners.')
                 ->middleware('web')
                 ->group(base_path('routes/owner.php'));
 
-            Route::prefix('admin')
-                ->as('admin.')
+            Route::prefix('admins')
+                ->as('admins.')
                 ->middleware('web')
                 ->group(base_path('routes/admin.php'));
         });
