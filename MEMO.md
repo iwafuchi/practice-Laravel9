@@ -377,6 +377,7 @@ class RouteServiceProvider extends ServiceProvider {
         $this->configureRateLimiting();
         $this->routes(function () {
             Route::middleware('api')
+                //prefixでURIの内容に沿って処理を分岐させる
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
             Route::prefix('/')
