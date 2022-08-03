@@ -425,3 +425,56 @@ public function authenticate() {
     RateLimiter::clear($this->throttleKey());
 }
 ```
+
+### URIの変更
+
+``` php
+//app/Providers/RouteServiceProvider.php
+public function boot() {
+    $this->configureRateLimiting();
+    $this->routes(function () {
+        Route::middleware('api')
+            ->prefix('api')
+            ->group(base_path('routes/api.php'));
+        //prefixはURIで待ち受ける際の値(外部用のroute)
+        Route::prefix('/')
+        //asはguradで扱う値(内部用のroute)
+            ->as('users.')
+            ->middleware('web')
+            ->group(base_path('routes/web.php'));
+        Route::prefix('owner')
+            ->as('owners.')
+            ->middleware('web')
+            ->group(base_path('routes/owner.php'));
+        Route::prefix('admins')
+            ->as('admins.')
+            ->middleware('web')
+            ->group(base_path('routes/admin.php'));
+    });
+}
+
+
+//blade内でルーティングが存在するかチェックするguradを使用しているのでconfig/auth.phpを参照する
+@if (Route::has('owners.login'))
+
+//config/auth.php
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'owners' => [
+            'driver' => 'session',
+            'provider' => 'owners',
+        ],
+        'admins' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+    ],
+```
