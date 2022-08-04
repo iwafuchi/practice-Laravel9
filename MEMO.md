@@ -436,13 +436,13 @@ public function boot() {
         Route::middleware('api')
             ->prefix('api')
             ->group(base_path('routes/api.php'));
-        //prefixはURIで待ち受ける際の値(外部用のroute)
+        //prefixはURIで待ち受ける際の値(外部用のroute)この値を変更することでアクセスする際のURIを変更できる。
         Route::prefix('/')
         //asはguradで扱う値(内部用のroute)
             ->as('users.')
             ->middleware('web')
             ->group(base_path('routes/web.php'));
-        Route::prefix('owner')
+        Route::prefix('owners')
             ->as('owners.')
             ->middleware('web')
             ->group(base_path('routes/owner.php'));
