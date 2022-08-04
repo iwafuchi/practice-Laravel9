@@ -477,4 +477,13 @@ public function boot() {
         ],
 
     ],
+
+//resources/views/tests/welcome.blade.php
+
+<h1>Hello World !!!</h1>
+
+//ここのhrefはrouteのpath
+<a href="{{ url('/test/component-test1') }}">component-test1</a>
+<a href="{{ url('/test/component-test2') }}">component-test2</a>
+
 ```
