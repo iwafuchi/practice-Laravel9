@@ -20,8 +20,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('users.dashboard');
-})->middleware(['auth:users'])->name('dashboard');
+    return view('tests.dashboard');
+})->middleware(['auth:tests'])->name('dashboard');
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
 Route::get('/component-test2', [ComponentTestController::class, 'showComponent2']);

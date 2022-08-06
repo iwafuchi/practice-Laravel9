@@ -53,6 +53,11 @@ return [
             'provider' => 'admins',
         ],
 
+        'tests' => [
+            'driver' => 'session',
+            'provider' => 'tests',
+        ],
+
     ],
 
     /*
@@ -86,10 +91,10 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'tests' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Test::class,
+        ],
     ],
 
     /*
@@ -123,6 +128,12 @@ return [
         'admins' => [
             'provider' => 'admins',
             'table' => 'admins_password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'tests' => [
+            'provider' => 'tests',
+            'table' => 'tests_password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
