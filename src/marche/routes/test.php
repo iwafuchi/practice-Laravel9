@@ -28,4 +28,4 @@ Route::get('/component-test2', [ComponentTestController::class, 'showComponent2'
 Route::get('/servicecontainertest', [LifeCycleTestController::class, 'showServiceContainerTest']);
 Route::get('/serviceprovider', [LifeCycleTestController::class, 'showServiceProviderTest']);
 
-require __DIR__ . '/auth.php';
+require __DIR__ . '/authTest.php';

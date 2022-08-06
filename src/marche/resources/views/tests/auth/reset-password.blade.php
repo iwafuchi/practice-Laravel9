@@ -9,7 +9,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-        <form method="POST" action="{{ route('users.password.update') }}">
+        <form method="POST" action="{{ route('tests.password.update') }}">
             @csrf
 
             <!-- Password Reset Token -->

@@ -13,7 +13,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-        <form method="POST" action="{{ route('users.password.confirm') }}">
+        <form method="POST" action="{{ route('tests.password.confirm') }}">
             @csrf
 
             <!-- Password -->
