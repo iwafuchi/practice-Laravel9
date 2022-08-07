@@ -90,7 +90,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-
         'tests' => [
             'driver' => 'eloquent',
             'model' => App\Models\Test::class,
