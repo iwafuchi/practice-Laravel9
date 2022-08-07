@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tests\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Test;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -32,11 +32,11 @@ class RegisteredUserController extends Controller {
     public function store(Request $request) {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:tests'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $user = Test::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),

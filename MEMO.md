@@ -487,3 +487,53 @@ public function boot() {
 <a href="{{ url('/test/component-test2') }}">component-test2</a>
 
 ```
+
+### Laravel Breeze register by database
+
+```php
+//app/Http/Controllers/Test/Auth?registerdUserController.php
+
+- use App\Models\User;
++ use App\Models\Test;
+
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:tests'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
+
+        $user = Test::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+```
+
+### Laravel Breeze Logout redirect
+
+```php
+
+class AuthenticatedSessionController extends Controller {
+        public function destroy(Request $request) {
+        //guardで設定した値
+        Auth::guard('tests')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        //リダイレクト先のuri
+        return redirect('/test');
+    }
+}
+
+```
