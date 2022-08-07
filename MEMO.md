@@ -284,9 +284,10 @@ config/auth.phpで設定する
 //app/Http/Middleware//Authenticate.php
 //リダイレクト処理を記述するファイル
 class Authenticate extends Middleware {
-    protected $userRoot = 'user.login';
-    protected $ownerRoot = 'owner.login';
-    protected $adminRoot = 'admin.login';
+    //route変数はログイン後にリダイレクトされるパスを指定する
+    protected $userRoute = 'user.login';
+    protected $ownerRoute = 'owner.login';
+    protected $adminRoute = 'admin.login';
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
@@ -298,12 +299,12 @@ class Authenticate extends Middleware {
             //Route::isで設定するURIはapp/Providers/RouteServiceProvider.phpで設定した値
             //今回はasで別名をしていしているのでその値を使用する
             if (Route::is('owner.*')) {
-                return route($this->ownerRoot);
+                return route($this->ownerRoute);
             }
             if (Route::is('admin.*')) {
-                return route($this->adminRoot);
+                return route($this->adminRoute);
             }
-            return route($this->userRoot);
+            return route($this->userRoute);
         }
     }
 }
