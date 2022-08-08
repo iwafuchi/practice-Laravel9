@@ -538,3 +538,19 @@ class AuthenticatedSessionController extends Controller {
 }
 
 ```
+
+### publicフォルダにstorageフォルダをリンクさせる
+
+Laravelは外部へ公開する為にデータを保存するとstorage/app/publicへ保存される
+通常外部へ公開する為のフォルダはpublicディレクトリを使用する。
+しかしユーザーが追加するファイルかつ、外部からアクセスが必要になる際はstorage/app/publicを利用する(ユーザーのプロフィール画像等)
+
+```php
+//publicディレクトリにシンボリックリンクを作成する
+//docker環境化では参照時にエラーが発生してもリンクに成功していれば大丈夫。
+//気になるのであればRemoteContainerで開発を行う。
+php artisan storage:link
+
+//blade.php
+<img src="{{ asset('storage/user_icon.png') }}">
+```
