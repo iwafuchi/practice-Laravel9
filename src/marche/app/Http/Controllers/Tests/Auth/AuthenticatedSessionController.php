@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admins\Auth;
+namespace App\Http\Controllers\Tests\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -15,7 +15,7 @@ class AuthenticatedSessionController extends Controller {
      * @return \Illuminate\View\View
      */
     public function create() {
-        return view('admins.auth.login');
+        return view('tests.auth.login');
     }
 
     /**
@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller {
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::ADMINS_HOME);
+        return redirect()->intended(RouteServiceProvider::TESTS_HOME);
     }
 
     /**
@@ -39,12 +39,12 @@ class AuthenticatedSessionController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request) {
-        Auth::guard('admins')->logout();
+        Auth::guard('tests')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/admin');
+        return redirect('/test');
     }
 }

@@ -20,12 +20,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('users.dashboard');
-})->middleware(['auth:users'])->name('dashboard');
+    return view('tests.dashboard');
+})->middleware(['auth:tests'])->name('dashboard');
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
 Route::get('/component-test2', [ComponentTestController::class, 'showComponent2']);
 Route::get('/servicecontainertest', [LifeCycleTestController::class, 'showServiceContainerTest']);
 Route::get('/serviceprovider', [LifeCycleTestController::class, 'showServiceProviderTest']);
 
-require __DIR__ . '/auth.php';
+require __DIR__ . '/authTest.php';
