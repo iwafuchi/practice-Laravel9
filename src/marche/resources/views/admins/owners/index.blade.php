@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            オーナー一覧
         </h2>
     </x-slot>
 
@@ -9,27 +9,43 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    Eloquent:
-                    <div class="flex">
-                        @foreach ($eAll as $eOwner)
-                            <div class="flex-1">
-                                {{ $eOwner->name }}
-                                {{ $eOwner->created_at->diffForHumans() }}
+                    <section class="text-gray-600 body-font">
+                        <div class="container  mx-auto">
+                            <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                                <table class="table-auto w-full text-left whitespace-no-wrap">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                                                name</th>
+                                            <th
+                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                email</th>
+                                            <th
+                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                created_at</th>
+                                            <th
+                                                class="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($owners as $owner)
+                                            <tr>
+                                                <td class="px-4 py-3">{{ $owner->name }}</td>
+                                                <td class="px-4 py-3">{{ $owner->email }}</td>
+                                                <td class="px-4 py-3">{{ $owner->created_at->diffForHumans() }}</td>
+                                                <td class="w-10 text-center">
+                                                    <input name="plan" type="radio">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                        @endforeach
-                    </div>
-                    <br>
-                    QueryBuilder:
-                    <div class="flex">
-                        @foreach ($qGet as $qOwner)
-                            <div class="flex-1">
-                                {{ $qOwner->name }}
-                                {{ Carbon\Carbon::parse($qOwner->created_at)->diffForHumans() }}
-                            </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
-    </div>
 </x-app-layout>

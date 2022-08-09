@@ -18,18 +18,8 @@ class OwnersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $dateNow = Carbon::now();
-        $dateParse = Carbon::parse(now());
-        echo $dateNow->year;
-        echo $dateParse;
-        $eAll = Owner::all();
-        $qGet = DB::table('owners')->select('name', 'created_at')->get();
-        // $qFirst = DB::table('owners')->select('name', 'email')->first();
-        // $cTest = collect([
-        //     "naem" => 'test'
-        // ]);
-        // dd($eAll, $qGet, $qFirst, $cTest);
-        return view('admins.owners.index', compact('eAll', 'qGet'));
+        $owners = Owner::select('name', 'email', 'created_at')->get();
+        return view('admins.owners.index', compact('owners'));
     }
 
     /**
