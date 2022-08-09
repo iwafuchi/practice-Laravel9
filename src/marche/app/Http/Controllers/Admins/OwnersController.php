@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Mockery\Matcher\Any;
 
 class OwnersController extends Controller {
     public function __construct() {
         $this->middleware('auth:admins');
-        // // $this->middleware('log')->only('index');
-        // $this->middleware('subscribed')->except('store');
     }
     /**
      * Display a listing of the resource.

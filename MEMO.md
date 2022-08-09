@@ -554,3 +554,31 @@ php artisan storage:link
 //blade.php
 <img src="{{ asset('storage/user_icon.png') }}">
 ```
+
+### リソースコントローラー
+
+CRUD処理を簡潔にできる機能
+
+```php
+//生成コマンド
+php artisan make:controller YourResourceController --resource
+
+//userでログインした状態でのみリソースコントローラーを扱う例
+
+//Route側
+Route::resouce('product',YourResouceController::class)->middleware('auth:user');
+
+//Controller側
+class YourResouceController extends Controller {
+    public function __construct(){
+        $this->middleware('auth:user')
+    }
+}
+```
+
+### シーダー(ダミーデータ)の作成
+
+```php
+php artisan make:seeder YourSeeder
+//database/seeders 直下生成される
+```
