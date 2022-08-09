@@ -59,6 +59,7 @@ resouces/views/components/yourFolder/yourComponents
 class ComponentTestController extends Controller {
     public function showComponent1() {
         $name = "Jhon doe";
+        //view側に変数を渡すにはcompactメソッドを使用する
         return view('tests.component-test1', compact('name'));
     }
 }
@@ -578,7 +579,54 @@ class YourResouceController extends Controller {
 
 ### シーダー(ダミーデータ)の作成
 
+シーダーを生成する
+
+```php
+//database/seeders 直下生成される
+php artisan make:seeder YourSeeder
+```
+
+ダミーデータを設定する
+
+```php
+<?php
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class YourSeeder extends Seeder {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    //ダミーデータの値を設定する
+    public function run() {
+        DB::table('your_table')->insert([
+            'name' => 'test',
+            'email' => 'test@test.com',
+            'password' => Hash::make('password123'),
+            'created_at' => '2022/01/01 00:00:00'
+        ]);
+    }
+}
+```
+
+テーブルの再生成かつシーダーの追加
+--seedオプションでシーダーの追加
+
+```php
+//down()を実行後にup()を実行する
+php artisan migrate:refresh --seed
+
+//全テーブルを削除してup()を実行
+php artisan migrate:fresh --seed
+```
+
+シーダーのみの追加
+
 ```php
 php artisan make:seeder YourSeeder
-//database/seeders 直下生成される
 ```
