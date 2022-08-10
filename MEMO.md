@@ -731,6 +731,4 @@ if ($status === 'error') {
         {{ session('message') }}
 f    </div>
 @endif
-
-
 ```
