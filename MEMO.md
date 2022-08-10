@@ -1,5 +1,7 @@
 # 学習中のメモ
 
+後でまとめる
+
 ## middleware の一覧
 
 /app/Http/Kernel.php
@@ -629,4 +631,106 @@ php artisan migrate:fresh --seed
 
 ```php
 php artisan make:seeder YourSeeder
+```
+
+## リソースコントローラー CRUD(Store)
+
+```php
+
+//view側でformでmethod="post" action=storeを指定する
+<form method="post" action="{{ route('admins.owners.store') }}">
+// @csrfは必須
+@csrf
+    <div class="relative">
+        <label for="name">Name</label>
+        // inputタグのname="attribute"でparamの名前を設定する oldで画面更新後も値を保持できる
+        <input type="text" id="name" name="name" value="{{ old('name') }}">
+    </div>
+</form>
+
+//リソースコントローラー
+//Request $requestインスタンスでformのparamを受け取る $request->nameの形でparamを取得する
+class OwnersController extends Controller {
+    public function __construct() {
+        $this->middleware('auth:admins');
+    }
+    public function store(Request $request) {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        Owner::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('admins.owners.index');
+    }
+}
+//Modelで設定した$fillableにcreateで値を渡す
+class Owner extends Authenticatable {
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+}
+```
+
+## フラッシュメッセージ
+
+英語だとtoaster
+
+```php
+// ResouceController
+class OwnersController extends Controller {
+    public function store(Request $request) {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        Owner::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()
+            ->route('admins.owners.index')
+            //withメソッドで遷移先にメッセージを送付することができる。
+            ->with('message', 'オーナー登録を実施しました');
+            // 複数送付する場合は、配列にして送る
+            // ->with([
+            //     'message' => 'オーナー登録を実施しました',
+            //     'session' => $request->session()->all()
+            // ]);
+    }
+}
+// フラッシュメッセージ用のコンポーネントを用意する
+// /resources/views/components/flash-message.blade.php
+@props(['status' => 'info'])
+
+@php
+if ($status === 'info') {
+    $bgColor = 'bg-blue-300';
+}
+if ($status === 'error') {
+    $bgColor = 'bg-red-300';
+}
+@endphp
+
+@if (session('message'))
+    <div class="{{ $bgColor }} w-1/2 mx-auto p-2 text-white">
+        {{ session('message') }}
+f    </div>
+@endif
+
+
 ```
