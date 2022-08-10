@@ -732,3 +732,9 @@ if ($status === 'error') {
 f    </div>
 @endif
 ```
+
+```php
+//routeのリストを表示する
+php artisan route:list | grep admin
+
+```

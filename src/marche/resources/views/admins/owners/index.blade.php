@@ -30,7 +30,7 @@
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                                 created_at</th>
                                             <th
-                                                class="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                                                class="w-32 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
                                             </th>
                                         </tr>
                                     </thead>
@@ -40,8 +40,10 @@
                                                 <td class="px-4 py-3">{{ $owner->name }}</td>
                                                 <td class="px-4 py-3">{{ $owner->email }}</td>
                                                 <td class="px-4 py-3">{{ $owner->created_at->diffForHumans() }}</td>
-                                                <td class="w-10 text-center">
-                                                    <input name="plan" type="radio">
+                                                <td class="w-32 text-center">
+                                                    <button type="button"
+                                                        onclick="location.href='{{ route('admins.owners.edit', ['owner' => $owner->id]) }}'"
+                                                        class="flex mx-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded ">編集</button>
                                                 </td>
                                             </tr>
                                         @endforeach
