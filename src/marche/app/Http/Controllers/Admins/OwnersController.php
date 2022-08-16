@@ -86,7 +86,14 @@ class OwnersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+        $owner = Owner::findOrFail($id);
+        $owner->name = $request->name;
+        $owner->email = $request->email;
+        $owner->password = Hash::make($request->password);
+        $owner->save();
+
+        return redirect()->route('admins.owners.index')
+            ->with('message', 'オーナー情報を更新しました。');
     }
 
     /**
