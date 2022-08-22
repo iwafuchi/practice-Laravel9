@@ -103,6 +103,6 @@ class OwnersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        //
+        dd('削除処理');
     }
 }

@@ -32,6 +32,9 @@
                                             <th
                                                 class="w-32 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
                                             </th>
+                                            <th
+                                                class="w-32 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -45,6 +48,16 @@
                                                         onclick="location.href='{{ route('admins.owners.edit', ['owner' => $owner->id]) }}'"
                                                         class="flex mx-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded ">編集</button>
                                                 </td>
+                                                <form id="delete_{{ $owner->id }}" method="POST"
+                                                    action="{{ route('admins.owners.destroy', ['owner' => $owner->id]) }}">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <td class="w-32 text-center">
+                                                        <button type="button" data-id="{{ $owner->id }}"
+                                                            onclick="deletePost(this)"
+                                                            class="flex mx-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded ">削除</button>
+                                                    </td>
+                                                </form>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -55,4 +68,12 @@
                 </div>
             </div>
         </div>
+        <script>
+            function deletePost(e) {
+                'use strict';
+                if (confirm('本当に削除してもよろしいですか？')) {
+                    document.getElementById('delete_' + e.dataset.id).submit();
+                }
+            }
+        </script>
 </x-app-layout>
