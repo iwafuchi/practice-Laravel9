@@ -1,5 +1,7 @@
 # 学習中のメモ
 
+後でまとめる
+
 ## middleware の一覧
 
 /app/Http/Kernel.php
@@ -59,6 +61,7 @@ resouces/views/components/yourFolder/yourComponents
 class ComponentTestController extends Controller {
     public function showComponent1() {
         $name = "Jhon doe";
+        //view側に変数を渡すにはcompactメソッドを使用する
         return view('tests.component-test1', compact('name'));
     }
 }
@@ -538,3 +541,211 @@ class AuthenticatedSessionController extends Controller {
 }
 
 ```
+
+### publicフォルダにstorageフォルダをリンクさせる
+
+Laravelは外部へ公開する為にデータを保存するとstorage/app/publicへ保存される
+通常外部へ公開する為のフォルダはpublicディレクトリを使用する。
+しかしユーザーが追加するファイルかつ、外部からアクセスが必要になる際はstorage/app/publicを利用する(ユーザーのプロフィール画像等)
+
+```php
+//publicディレクトリにシンボリックリンクを作成する
+//docker環境化では参照時にエラーが発生してもリンクに成功していれば大丈夫。
+//気になるのであればRemoteContainerで開発を行う。
+php artisan storage:link
+
+//blade.php
+<img src="{{ asset('storage/user_icon.png') }}">
+```
+
+### リソースコントローラー
+
+CRUD処理を簡潔にできる機能
+
+```php
+//生成コマンド
+php artisan make:controller YourResourceController --resource
+
+//userでログインした状態でのみリソースコントローラーを扱う例
+
+//Route側
+Route::resouce('product',YourResouceController::class)->middleware('auth:user');
+
+//Controller側
+class YourResouceController extends Controller {
+    public function __construct(){
+        $this->middleware('auth:user')
+    }
+}
+```
+
+### シーダー(ダミーデータ)の作成
+
+シーダーを生成する
+
+```php
+//database/seeders 直下生成される
+php artisan make:seeder YourSeeder
+```
+
+ダミーデータを設定する
+
+```php
+<?php
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class YourSeeder extends Seeder {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    //ダミーデータの値を設定する
+    public function run() {
+        DB::table('your_table')->insert([
+            'name' => 'test',
+            'email' => 'test@test.com',
+            'password' => Hash::make('password123'),
+            'created_at' => '2022/01/01 00:00:00'
+        ]);
+    }
+}
+```
+
+テーブルの再生成かつシーダーの追加
+--seedオプションでシーダーの追加
+
+```php
+//down()を実行後にup()を実行する
+php artisan migrate:refresh --seed
+
+//全テーブルを削除してup()を実行
+php artisan migrate:fresh --seed
+```
+
+シーダーのみの追加
+
+```php
+php artisan make:seeder YourSeeder
+```
+
+## リソースコントローラー CRUD(Store)
+
+```php
+
+//view側でformでmethod="post" action=storeを指定する
+<form method="post" action="{{ route('admins.owners.store') }}">
+// @csrfは必須
+@csrf
+    <div class="relative">
+        <label for="name">Name</label>
+        // inputタグのname="attribute"でparamの名前を設定する oldで画面更新後も値を保持できる
+        <input type="text" id="name" name="name" value="{{ old('name') }}">
+    </div>
+</form>
+
+//リソースコントローラー
+//Request $requestインスタンスでformのparamを受け取る $request->nameの形でparamを取得する
+class OwnersController extends Controller {
+    public function __construct() {
+        $this->middleware('auth:admins');
+    }
+    public function store(Request $request) {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        Owner::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('admins.owners.index');
+    }
+}
+//Modelで設定した$fillableにcreateで値を渡す
+class Owner extends Authenticatable {
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+}
+```
+
+## フラッシュメッセージ
+
+英語だとtoaster
+
+```php
+// ResouceController
+class OwnersController extends Controller {
+    public function store(Request $request) {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        Owner::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()
+            ->route('admins.owners.index')
+            //withメソッドで遷移先にメッセージを送付することができる。
+            ->with('message', 'オーナー登録を実施しました');
+            // 複数送付する場合は、配列にして送る
+            // ->with([
+            //     'message' => 'オーナー登録を実施しました',
+            //     'session' => $request->session()->all()
+            // ]);
+    }
+}
+// フラッシュメッセージ用のコンポーネントを用意する
+// /resources/views/components/flash-message.blade.php
+@props(['status' => 'info'])
+
+@php
+if ($status === 'info') {
+    $bgColor = 'bg-blue-300';
+}
+if ($status === 'error') {
+    $bgColor = 'bg-red-300';
+}
+@endphp
+
+@if (session('message'))
+    <div class="{{ $bgColor }} w-1/2 mx-auto p-2 text-white">
+        {{ session('message') }}
+f    </div>
+@endif
+```
+
+```php
+//routeのリストを表示する | grep admin でadminのrouteで絞り込む
+php artisan route:list | grep admin
+
+```
+
+### 論理削除
+
+論理削除(ソフトデリート)  
+　削除フラグをTRUEに設定し、レコードの検索から除外する  
+　削除フラグをFALSEに設定することで検索可能にする  
+　データが肥大化するが、ストレージ上にレコードが存在するため復旧しやすい
+
+物理削除(デリート)  
+　ストレージ上からレコードを削除する
+　データが肥大化しない分、ストレージ上にレコードが存在しないので復旧しにくい

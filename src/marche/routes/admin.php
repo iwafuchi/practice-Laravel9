@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admins\OwnersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('admins.welcome');
 });
+
+Route::resource('owners', OwnersController::class)->middleware(['auth:admins']);
 
 Route::get('/dashboard', function () {
     return view('admins.dashboard');
