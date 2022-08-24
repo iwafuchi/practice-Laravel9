@@ -54,7 +54,10 @@ class OwnersController extends Controller {
 
         return redirect()
             ->route('admins.owners.index')
-            ->with('message', 'オーナー登録を実施しました');
+            ->with([
+                'message' => 'オーナー登録を実施しました',
+                'status' => 'info'
+            ]);
     }
 
     /**
@@ -93,7 +96,10 @@ class OwnersController extends Controller {
         $owner->save();
 
         return redirect()->route('admins.owners.index')
-            ->with('message', 'オーナー情報を更新しました。');
+            ->with([
+                'message' => 'オーナー情報を更新しました。',
+                'status' => 'info'
+            ]);
     }
 
     /**
@@ -103,6 +109,21 @@ class OwnersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        dd('削除処理');
+        //SoftDelete
+        Owner::findOrFail($id)->delete();
+        return redirect()->route('admins.owners.index')
+            ->with([
+                'message' => 'オーナー情報を削除しました。',
+                'status' => 'alert'
+            ]);
+    }
+
+    public function expiredOwnerIndex() {
+        $expiredOwners = Owner::onlyTrashed()->get();
+        return view('admins.expired-owners', compact('expiredOwners'));
+    }
+    public function expiredOwnerDestroy($id) {
+        Owner::onlyTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->route('admins.expired-owners.index');
     }
 }

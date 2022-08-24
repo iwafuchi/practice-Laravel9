@@ -749,3 +749,25 @@ php artisan route:list | grep admin
 物理削除(デリート)  
 　ストレージ上からレコードを削除する
 　データが肥大化しない分、ストレージ上にレコードが存在しないので復旧しにくい
+
+```php
+//migration
+$table->softDeletes();
+
+//model
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use SosftDeletes;
+
+//controller
+ControllerClass::findOrFail($id)->delete(); //ソフトデリート
+ControllerClass::all(); //ソフトデリートしたものは表示されない
+ControllerClass::onlyTranshed()->get(); //ゴミ箱のみ表示
+ControllerClass::withTranshed()->get(); //ゴミ箱も含め表示
+
+ControllerClass::onlyTranshed()->restore(); //復元
+ControllerClass::onlyTranshed()->forceDelete(); //完全削除
+ControllerClass::withTranshed()->get(); //ゴミ箱も含め表示
+
+$recode->trashed() //ソフトデリートされているかの確認
+```
