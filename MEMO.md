@@ -771,3 +771,5 @@ ControllerClass::withTranshed()->get(); //ゴミ箱も含め表示
 
 $recode->trashed() //ソフトデリートされているかの確認
 ```
+
+### ページネーション
