@@ -773,3 +773,23 @@ $recode->trashed() //ソフトデリートされているかの確認
 ```
 
 ### ページネーション
+
+ページネーションについて
+
+### Route::resourceのonlyとexcept
+
+only:指定したメソッドのみリクエストする事が出来る。allowlist方式
+except:指定したメソッド以外をリクエストする事が出来る。denylist方式
+
+```php
+//showメソッドのみをリクエスト出来る
+Route::resouce('admin',AdminController::class)
+    ->middleware(['auth:admin'])
+    ->only(['show'])
+
+
+//showメソッド以外をリクエスト出来る
+Route::resouce('admin',AdminController::class)
+    ->middleware(['auth:admin'])
+    ->except(['show'])
+```
