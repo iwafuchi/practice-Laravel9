@@ -793,3 +793,22 @@ Route::resouce('admin',AdminController::class)
     ->middleware(['auth:admin'])
     ->except(['show'])
 ```
+
+### bladeファイルでjavascriptファイルを読み込む
+
+JSファイルを作成して読み込むパターン
+
+```javascript
+function test() {
+    'use strict';
+    alert("test");
+}
+
+```
+
+```php
+//blade
+<script src="{{ asset('/js/test.js') }}"></script>
+```
+
+モジュールを作成して読み込むパターンも追記する
