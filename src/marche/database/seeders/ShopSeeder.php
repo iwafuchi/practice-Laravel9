@@ -16,7 +16,7 @@ class ShopSeeder extends Seeder {
         for ($i = 1; $i < 7; $i++) {
             DB::table('shops')->insert([
                 [
-                    'owners_id' => $i,
+                    'owner_id' => $i,
                     'name' => 'ここに店名が入ります',
                     'information' => 'ここにお店の情報が入ります',
                     'filename' => '',

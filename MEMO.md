@@ -822,15 +822,22 @@ return new class extends Migration {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
             // foreignIdで外部キー制約を付与する
-            // ownersテーブルのidカラムを参照するにはowners_idと定義する
-            $table->foreignId('owners_id')->constrained();
-            $table->string('name');
-            $table->text('information');
-            $table->string('filename');
-            $table->boolean('is_selling');
-            $table->timestamps();
-        });
+            // Laravelのテーブル名の規則に従いownersテーブルのidカラムを参照するにはowner_idと定義する
+            // テーブル名が規則と一致しない場合は、引数としてconstrainedメソッドに渡すことでテーブル名を指定出来る
+            $table->foreignId('owner_id')->constrained();
+            //etc...
+    });
     }
-    // etc
+    // etc...
+}
+```
+
+### Eloquant relation
+
+```php
+//1対1
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class Owner extends Authenticatable{
+
 }
 ```

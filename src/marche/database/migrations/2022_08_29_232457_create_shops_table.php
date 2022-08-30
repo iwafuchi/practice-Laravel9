@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owners_id')->constrained();
+            $table->foreignId('owner_id')->constrained();
             $table->string('name');
             $table->text('information');
             $table->string('filename');
