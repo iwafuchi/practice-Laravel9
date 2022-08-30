@@ -835,9 +835,28 @@ return new class extends Migration {
 ### Eloquant relation
 
 ```php
-//1対1
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class Owner extends Authenticatable{
-
+    use HasFactory;
+    //Owner側からShopモデルへアクセスするメソッドを定義する
+    public function shop() {
+        //1対1のリレーションを定義する
+        return $this->hasOne(Shop::class);
+    }
 }
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Owner;
+class Shop extends Model {
+    use HasFactory;
+
+    //Shop側からOwnerモデルへ逆アクセスするメソッドを定義する
+    public function Owner() {
+        //Owner_idカラムと一致するidを持つShopモデルのレコードを返す
+        return $this->belongsTo(Owner::class);
+    }
+}
+
 ```
