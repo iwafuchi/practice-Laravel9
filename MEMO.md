@@ -773,3 +773,90 @@ $recode->trashed() //ソフトデリートされているかの確認
 ```
 
 ### ページネーション
+
+ページネーションについて
+
+### Route::resourceのonlyとexcept
+
+only:指定したメソッドのみリクエストする事が出来る。allowlist方式
+except:指定したメソッド以外をリクエストする事が出来る。denylist方式
+
+```php
+//showメソッドのみをリクエスト出来る
+Route::resouce('admin',AdminController::class)
+    ->middleware(['auth:admin'])
+    ->only(['show'])
+
+
+//showメソッド以外をリクエスト出来る
+Route::resouce('admin',AdminController::class)
+    ->middleware(['auth:admin'])
+    ->except(['show'])
+```
+
+### bladeファイルでjavascriptファイルを読み込む
+
+JSファイルを作成して読み込むパターン
+
+```javascript
+function test() {
+    'use strict';
+    alert("test");
+}
+
+```
+
+```php
+//blade
+<script src="{{ asset('/js/test.js') }}"></script>
+```
+
+モジュールを作成して読み込むパターンも追記する
+
+### migration 外部キー制約の付与
+
+```php
+return new class extends Migration {
+
+    public function up() {
+        Schema::create('shops', function (Blueprint $table) {
+            $table->id();
+            // foreignIdで外部キー制約を付与する
+            // Laravelのテーブル名の規則に従いownersテーブルのidカラムを参照するにはowner_idと定義する
+            // テーブル名が規則と一致しない場合は、引数としてconstrainedメソッドに渡すことでテーブル名を指定出来る
+            $table->foreignId('owner_id')->constrained();
+            //etc...
+    });
+    }
+    // etc...
+}
+```
+
+### Eloquant relation
+
+```php
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class Owner extends Authenticatable{
+    use HasFactory;
+    //Owner側からShopモデルへアクセスするメソッドを定義する
+    public function shop() {
+        //1対1のリレーションを定義する
+        return $this->hasOne(Shop::class);
+    }
+}
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Owner;
+class Shop extends Model {
+    use HasFactory;
+
+    //Shop側からOwnerモデルへ逆アクセスするメソッドを定義する
+    public function Owner() {
+        //Owner_idカラムと一致するidを持つShopモデルのレコードを返す
+        return $this->belongsTo(Owner::class);
+    }
+}
+
+```

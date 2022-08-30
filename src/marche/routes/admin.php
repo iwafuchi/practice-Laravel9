@@ -19,7 +19,8 @@ Route::get('/', function () {
 });
 
 Route::resource('owners', OwnersController::class)
-    ->middleware(['auth:admins']);
+    ->middleware(['auth:admins'])
+    ->except(['show']);
 
 Route::prefix('expired-owners')
     ->middleware('auth:admins')
