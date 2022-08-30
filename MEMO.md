@@ -812,3 +812,25 @@ function test() {
 ```
 
 モジュールを作成して読み込むパターンも追記する
+
+### migration 外部キー制約の付与
+
+```php
+return new class extends Migration {
+
+    public function up() {
+        Schema::create('shops', function (Blueprint $table) {
+            $table->id();
+            // foreignIdで外部キー制約を付与する
+            // ownersテーブルのidカラムを参照するにはowners_idと定義する
+            $table->foreignId('owners_id')->constrained();
+            $table->string('name');
+            $table->text('information');
+            $table->string('filename');
+            $table->boolean('is_selling');
+            $table->timestamps();
+        });
+    }
+    // etc
+}
+```
