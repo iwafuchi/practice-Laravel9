@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Shop extends Model {
     use HasFactory;
 
+    protected $fillable = [
+        'owner_id',
+        'name',
+        'information',
+        'filename',
+        'is_selling'
+    ];
+
     public function Owner() {
         return $this->belongsTo(Owner::class);
     }

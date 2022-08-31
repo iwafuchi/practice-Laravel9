@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Owner; // Eloquent
-use Illuminate\Support\Facades\DB; //QueryBuilder
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Models\Owner;
+use App\Models\Shop;
+use Exception;
 
 class OwnersController extends Controller {
     public function __construct() {
@@ -40,17 +42,33 @@ class OwnersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        Owner::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            DB::transaction(function () use ($request) {
+                $owner = Owner::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+
+                Shop::create([
+                    'owner_id' => $owner->id,
+                    'name' => '店名を入力して下さい',
+                    'information' => '店の情報を入力して下さい',
+                    'filename' => 'ファイル名を入力して下さい',
+                    'is_selling' => true
+                ]);
+            }, 2);
+        } catch (Exception $e) {
+            Log::error($e);
+            throw $e;
+        }
 
         return redirect()
             ->route('admins.owners.index')
