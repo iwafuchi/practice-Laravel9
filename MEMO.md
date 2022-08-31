@@ -670,14 +670,20 @@ class OwnersController extends Controller {
         return redirect()->route('admins.owners.index');
     }
 }
-//Modelで設定した$fillableにcreateで値を渡す
+//Modelで設定した$fillableまたは$guardedにcreateで値を渡す
 class Owner extends Authenticatable {
     use HasFactory;
 
+    //fillableは指定したカラムに対してのみcreate()やupdate(),fill()が可能となる定義
     protected $fillable = [
         'name',
         'email',
         'password',
+    ];
+
+    //guardedは指定したカラムに対してのみcreate()やupdate(),fill()が不可能となる定義
+    protected $guarded = [
+        'name',
     ];
 }
 ```
