@@ -563,7 +563,7 @@ php artisan storage:link
 CRUD処理を簡潔にできる機能
 
 ```php
-//生成コマンド
+//生成コマンド --resourceオプションを指定する事で生成される
 php artisan make:controller YourResourceController --resource
 
 //userでログインした状態でのみリソースコントローラーを扱う例
@@ -670,14 +670,20 @@ class OwnersController extends Controller {
         return redirect()->route('admins.owners.index');
     }
 }
-//Modelで設定した$fillableにcreateで値を渡す
+//Modelで設定した$fillableまたは$guardedにcreateで値を渡す
 class Owner extends Authenticatable {
     use HasFactory;
 
+    //fillableは指定したカラムに対してのみcreate()やupdate(),fill()が可能となる定義
     protected $fillable = [
         'name',
         'email',
         'password',
+    ];
+
+    //guardedは指定したカラムに対してのみcreate()やupdate(),fill()が不可能となる定義
+    protected $guarded = [
+        'name',
     ];
 }
 ```
@@ -706,11 +712,12 @@ class OwnersController extends Controller {
             ->route('admins.owners.index')
             //withメソッドで遷移先にメッセージを送付することができる。
             ->with('message', 'オーナー登録を実施しました');
-            // 複数送付する場合は、配列にして送る
-            // ->with([
-            //     'message' => 'オーナー登録を実施しました',
-            //     'session' => $request->session()->all()
-            // ]);
+            
+            // 複数送付する場合はwithメソッドの引数を配列にして送る
+            ->with([
+                'message' => 'オーナー登録を実施しました',
+                'session' => $request->session()->all()
+            ]);
     }
 }
 // フラッシュメッセージ用のコンポーネントを用意する
@@ -824,7 +831,11 @@ return new class extends Migration {
             // foreignIdで外部キー制約を付与する
             // Laravelのテーブル名の規則に従いownersテーブルのidカラムを参照するにはowner_idと定義する
             // テーブル名が規則と一致しない場合は、引数としてconstrainedメソッドに渡すことでテーブル名を指定出来る
-            $table->foreignId('owner_id')->constrained();
+            $table->foreignId('owner_id')
+                ->constrained()
+                //更新時と削除時にcascadeを有効にする
+                ->cascadeOnUpdate('cascade')
+                ->cascadeOnDelete('cascade');
             //etc...
     });
     }
