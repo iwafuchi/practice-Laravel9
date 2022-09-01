@@ -712,11 +712,12 @@ class OwnersController extends Controller {
             ->route('admins.owners.index')
             //withメソッドで遷移先にメッセージを送付することができる。
             ->with('message', 'オーナー登録を実施しました');
-            // 複数送付する場合は、配列にして送る
-            // ->with([
-            //     'message' => 'オーナー登録を実施しました',
-            //     'session' => $request->session()->all()
-            // ]);
+            
+            // 複数送付する場合はwithメソッドの引数を配列にして送る
+            ->with([
+                'message' => 'オーナー登録を実施しました',
+                'session' => $request->session()->all()
+            ]);
     }
 }
 // フラッシュメッセージ用のコンポーネントを用意する
@@ -830,7 +831,11 @@ return new class extends Migration {
             // foreignIdで外部キー制約を付与する
             // Laravelのテーブル名の規則に従いownersテーブルのidカラムを参照するにはowner_idと定義する
             // テーブル名が規則と一致しない場合は、引数としてconstrainedメソッドに渡すことでテーブル名を指定出来る
-            $table->foreignId('owner_id')->constrained();
+            $table->foreignId('owner_id')
+                ->constrained()
+                //更新時と削除時にcascadeを有効にする
+                ->cascadeOnUpdate('cascade')
+                ->cascadeOnDelete('cascade');
             //etc...
     });
     }

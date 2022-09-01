@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('owner_id')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->cascadeOnUpdate('cascade')
+                ->cascadeOnDelete('cascade');
             $table->string('name');
             $table->text('information');
             $table->string('filename');
