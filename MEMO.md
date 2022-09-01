@@ -563,7 +563,7 @@ php artisan storage:link
 CRUD処理を簡潔にできる機能
 
 ```php
-//生成コマンド
+//生成コマンド --resourceオプションを指定する事で生成される
 php artisan make:controller YourResourceController --resource
 
 //userでログインした状態でのみリソースコントローラーを扱う例
