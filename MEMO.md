@@ -871,3 +871,29 @@ class Shop extends Model {
 }
 
 ```
+
+### inline middleware
+
+クロージャを使用したミドルウェアの登録。
+単一のコントローラー用のinline middlewareを定義する
+
+```php
+class YouAreController extends Controller {
+    public function __construct() {
+
+        //urlのパラメータをチェックして不一致のものは404画面に遷移させる
+        $this->middleware(function ($request, $next) {
+            $id = $request->route()->parameter('foo');
+            if (!is_null($id)) {
+                $shopsOwnerId = Shop::findOrFail($id)->owner->id;
+                $shopId = (int)$shopsOwnerId;
+                $ownerId = Auth::id();
+                if ($shopId !== $ownerId) {
+                    abort(404);
+                }
+            }
+            return $next($request);
+        });
+    }
+}
+```
