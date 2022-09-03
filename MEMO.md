@@ -897,3 +897,13 @@ class YouAreController extends Controller {
     }
 }
 ```
+
+### custom error page
+
+エラーページの編集を行う為に、エラーページのテンプレートを生成する
+
+```php
+php artisan vendor:publish --tag=laravel-errors
+```
+
+resources/views/errorsに生成されるので編集をする
