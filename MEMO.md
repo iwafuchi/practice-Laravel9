@@ -946,7 +946,7 @@ PHP5.4以上では、画像処理ライブラリのGDまたはImageMagickをイ�
 2. [LaravelでIntervention/Imageを使う際に、GD拡張機能を使うためのDockerfileの書き方](https://qiita.com/wbraver/items/c27ccd52fb4e2ae05611)
 
 ```Dockerfile
-##最小構成
+## png,jpg,jpegの最小構成
 RUN apt-get update && \
     apt-get -y install libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
