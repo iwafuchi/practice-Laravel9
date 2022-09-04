@@ -907,3 +907,30 @@ php artisan vendor:publish --tag=laravel-errors
 ```
 
 resources/views/errorsに生成されるので編集をする
+
+### Storage::putFile()で画像が保存されなかった
+
+原因はディレクトリ生成時の権限の問題だった。
+config/filesystems.phpにディレクト生成時の権限設定を追加し解決した。
+
+```php
+    'disks' => [
+
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+            'throw' => false,
+            // permissionsの設定を追加
+            'permissions' => [
+                'dir' => [
+                    'public'  => 0775,
+                    'private' => 0775,
+                ],
+                'file' => [
+                    'public' => 0664,
+                    'private' => 0664,
+                ],
+            ]
+        ],
+    ]
+```
