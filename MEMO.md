@@ -871,3 +871,94 @@ class Shop extends Model {
 }
 
 ```
+
+### inline middleware
+
+クロージャを使用したミドルウェアの登録。
+単一のコントローラー用のinline middlewareを定義する
+
+```php
+class YouAreController extends Controller {
+    public function __construct() {
+
+        //urlのパラメータをチェックして不一致のものは404画面に遷移させる
+        $this->middleware(function ($request, $next) {
+            $id = $request->route()->parameter('foo');
+            if (!is_null($id)) {
+                $shopsOwnerId = Shop::findOrFail($id)->owner->id;
+                $shopId = (int)$shopsOwnerId;
+                $ownerId = Auth::id();
+                if ($shopId !== $ownerId) {
+                    abort(404);
+                }
+            }
+            return $next($request);
+        });
+    }
+}
+```
+
+### custom error page
+
+エラーページの編集を行う為に、エラーページのテンプレートを生成する
+
+```php
+php artisan vendor:publish --tag=laravel-errors
+```
+
+resources/views/errorsに生成されるので編集をする
+
+### Storage::putFile()で画像が保存されなかった
+
+原因はディレクトリ生成時の権限の問題だった。
+config/filesystems.phpにディレクト生成時の権限設定を追加し解決した。
+
+```php
+    'disks' => [
+
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+            'throw' => false,
+            // permissionsの設定を追加
+            'permissions' => [
+                'dir' => [
+                    'public'  => 0775,
+                    'private' => 0775,
+                ],
+                'file' => [
+                    'public' => 0664,
+                    'private' => 0664,
+                ],
+            ]
+        ],
+    ]
+```
+
+### Intervention/Imageをwsl2のdocker上で使用する際の注意事項
+
+PHP5.4以上では、画像処理ライブラリのGDまたはImageMagickをインストールする必要がある
+今回はGDをインストールするようにDockerfileに追記した。  
+
+参考資料
+
+1. [php - Official Image | Docker Hub](https://hub.docker.com/_/php)
+2. [LaravelでIntervention/Imageを使う際に、GD拡張機能を使うためのDockerfileの書き方](https://qiita.com/wbraver/items/c27ccd52fb4e2ae05611)
+
+```Dockerfile
+##最小構成
+RUN apt-get update && \
+    apt-get -y install libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install -j$(nproc) gd
+```
+
+aliasesを設定した際にvscode上でエラーとなる。
+IDEがFacadeを補完できていないためである。
+
+```php
+//laravel-ide-helperのinstall
+composer require --dev barryvdh/laravel-ide-helper
+//ファサードの情報を自動生成する
+php artisan ide-helper:generate
+```

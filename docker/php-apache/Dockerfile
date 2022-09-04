@@ -9,8 +9,9 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN apt-get update && \
-    apt-get -y install --no-install-recommends git unzip libzip-dev libicu-dev libonig-dev openssh-server && \
-    docker-php-ext-install intl pdo_mysql zip bcmath && \
+    apt-get -y install --no-install-recommends git unzip libzip-dev libicu-dev libonig-dev openssh-server libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install intl pdo_mysql zip bcmath -j$(nproc) gd && \
     cp /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/ && \
     cp /etc/apache2/mods-available/headers.load /etc/apache2/mods-enabled/ && \
     curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
