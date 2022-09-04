@@ -41,12 +41,10 @@ class ShopController extends Controller {
     public function update(Request $request, $id) {
         $imageFile = $request->image;
         if (!is_null($imageFile) && $imageFile->isValid()) {
-            // Storage::putFile('public/shops', $imageFile);
             $fileName = uniqid(rand() . '');
             $extension = $imageFile->extension();
             $fileNameToStore = $fileName . '.' . $extension;
             $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
-            dd($imageFile, $resizedImage);
             Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
         }
         return redirect()->route('owners.shops.index');
