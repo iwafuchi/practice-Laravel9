@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Shop;
+use App\Http\Requests\UploadImageRequest;
 use InterventionImage;
 
 class ShopController extends Controller {
@@ -38,7 +39,7 @@ class ShopController extends Controller {
     }
 
     //upload image
-    public function update(Request $request, $id) {
+    public function update(UploadImageRequest $request, $id) {
         $imageFile = $request->image;
         if (!is_null($imageFile) && $imageFile->isValid()) {
             $fileName = uniqid(rand() . '');
