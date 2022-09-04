@@ -934,3 +934,31 @@ config/filesystems.phpにディレクト生成時の権限設定を追加し解�
         ],
     ]
 ```
+
+### Intervention/Imageをwsl2のdocker上で使用する際の注意事項
+
+PHP5.4以上では、画像処理ライブラリのGDまたはImageMagickをインストールする必要がある
+今回はGDをインストールするようにDockerfileに追記した。  
+
+参考資料
+
+1. [php - Official Image | Docker Hub](https://hub.docker.com/_/php)
+2. [LaravelでIntervention/Imageを使う際に、GD拡張機能を使うためのDockerfileの書き方](https://qiita.com/wbraver/items/c27ccd52fb4e2ae05611)
+
+```Dockerfile
+##最小構成
+RUN apt-get update && \
+    apt-get -y install libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install -j$(nproc) gd
+```
+
+aliasesを設定した際にvscode上でエラーとなる。
+IDEがFacadeを補完できていないためである。
+
+```php
+//laravel-ide-helperのinstall
+composer require --dev barryvdh/laravel-ide-helper
+//ファサードの情報を自動生成する
+php artisan ide-helper:generate
+```
