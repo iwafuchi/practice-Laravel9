@@ -965,4 +965,113 @@ php artisan ide-helper:generate
 
 ### フォームリクエストバリデーション
 
-後でまとめる
+Illuminate\Http\Requestで提供されるバリデーション以上に複雑なものが必要な場合は、  
+フォームリクエストを作成する必要がある。
+
+```php
+//フォームリクエストを生成する
+php artisan make:request YourAreFormRequest
+```
+
+生成したフォームリクエストクラスはapp/Http/Requestsディレクトリに配置される。  
+下記の内容で生成される。  
+今回は画像データアップロード時の検証用バリデーションを例に設定する。
+
+```php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class YouAreFormRequest extends FormRequest {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize() {
+        //trueにするとこのクラスを使用する
+        return false;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules() {
+        //リクエスト中のデータを検証するバリデーションルールを設定する
+        return [
+        ];
+    }
+}
+
+//設定後
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class YouAreFormRequest extends FormRequest {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize() {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules() {
+        return [
+            'image' => 'image|mimes:jpg,jpeg,png|max:2048'
+        ];
+    }
+    //エラーメッセージのカスタマイズ
+    public function messages() {
+        return [
+            'image' => '指定されたファイルが画像ではありません',
+            'mimes' => '指定された拡張子(jpg/jpeg/png)ではありません',
+            'max' => 'ファイルサイズは2MB以内にしてください',
+        ];
+    }
+}
+```
+
+バリデーションを利用する
+
+```php
+<?php
+
+namespace App\Http\Controllers\Owners;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\YouAreFormRequest;
+use InterventionImage;
+
+class YouAreController extends Controller {
+    //etc...
+
+    //RequestClassからYouAreFormRequestに変更する
+    public function update(YouAreFormRequest $request, $id) {
+        $imageFile = $request->image;
+        if (!is_null($imageFile) && $imageFile->isValid()) {
+            $fileName = uniqid(rand() . '');
+            $extension = $imageFile->extension();
+            $fileNameToStore = $fileName . '.' . $extension;
+            $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
+            Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
+        }
+        return redirect()->route('owners.shops.index');
+    }
+}
+```
