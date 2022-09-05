@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Owners;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Shop;
 use App\Http\Requests\UploadImageRequest;
+use App\Services\ImageService;
 use InterventionImage;
 
 class ShopController extends Controller {
@@ -42,11 +42,12 @@ class ShopController extends Controller {
     public function update(UploadImageRequest $request, $id) {
         $imageFile = $request->image;
         if (!is_null($imageFile) && $imageFile->isValid()) {
-            $fileName = uniqid(rand() . '');
-            $extension = $imageFile->extension();
-            $fileNameToStore = $fileName . '.' . $extension;
-            $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
-            Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
+            $result = ImageService::upload($imageFile, 'shops');
+            //アップロード失敗
+            if (!$result) {
+                $shop = Shop::findOrFail($id);
+                return view('owners.shops.edit', compact('shop'));
+            }
         }
         return redirect()->route('owners.shops.index');
     }
