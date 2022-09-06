@@ -1032,6 +1032,8 @@ class YouAreFormRequest extends FormRequest {
     public function rules() {
         return [
             'image' => 'image|mimes:jpg,jpeg,png|max:2048'
+            // 配列でも指定できるその際はパイプ文字をカンマに置き換える必要がある
+            // 'image' => ['image','mimes:jpg,jpeg,png','max:2048']
         ];
     }
     //エラーメッセージのカスタマイズ
