@@ -1031,9 +1031,14 @@ class YouAreFormRequest extends FormRequest {
      */
     public function rules() {
         return [
-            'image' => 'image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+            //画像の複数アップロード時に配列の各要素をバリデーションする
+            'files.*.image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+
             // 配列でも指定できるその際はパイプ文字をカンマに置き換える必要がある
-            // 'image' => ['image','mimes:jpg,jpeg,png','max:2048']
+            // 'image' => ['image','mimes:jpg,jpeg,png','max:2048'],
+            // 'files.*.image' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+
         ];
     }
     //エラーメッセージのカスタマイズ
@@ -1045,6 +1050,13 @@ class YouAreFormRequest extends FormRequest {
         ];
     }
 }
+
+```
+
+画像を配列でアップロードする際の設定
+
+```html
+<input type="file" id="imgae" name="files[][image]" multiple accept="image/png,image/jpeg,image/jpg">
 ```
 
 バリデーションを利用する
