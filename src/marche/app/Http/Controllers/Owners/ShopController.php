@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Owners;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Shop;
 use App\Http\Requests\UploadImageRequest;
 use App\Services\ImageService;
-use InterventionImage;
 
 class ShopController extends Controller {
     public function __construct() {
