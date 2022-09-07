@@ -96,8 +96,9 @@ class ImageController extends Controller {
         ]);
 
         $image = Image::findOrFail($id);
-        $image->title = $request->title;
-        $image->save();
+        $image->fill($request->all())->save();
+        // $image->title = $request->title;
+        // $image->save();
 
         return redirect()->route('owners.images.index')
             ->with([

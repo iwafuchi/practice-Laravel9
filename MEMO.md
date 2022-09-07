@@ -707,6 +707,9 @@ class OwnersController extends Controller
         $owner->password = $request->password;
         $owner->save();
 
+        //fillableをチェックしつつ短く書く
+        $image->fill($request->all())->save();
+
         return redirect()->route('owner.edit', $owner);
     }
 }
