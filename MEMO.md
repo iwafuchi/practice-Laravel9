@@ -686,6 +686,33 @@ class Owner extends Authenticatable {
         'name',
     ];
 }
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Owner;
+use Illuminate\Http\Request;
+
+class OwnersController extends Controller
+{
+    public function update(Request $request, Owner $owner)
+    {
+        // $fillableに指定したもの以外は入らない
+        $owner->update($request->all());
+
+        //saveメソッドで更新することも可能だが$fillableを無視するので注意
+        $owner->name = $request->name;
+        $owner->email = $request->email;
+        $owner->password = $request->password;
+        $owner->save();
+
+        //fillableをチェックしつつ短く書く
+        $image->fill($request->all())->save();
+
+        return redirect()->route('owner.edit', $owner);
+    }
+}
 ```
 
 ## フラッシュメッセージ
@@ -1031,9 +1058,14 @@ class YouAreFormRequest extends FormRequest {
      */
     public function rules() {
         return [
-            'image' => 'image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+            //画像の複数アップロード時に配列の各要素をバリデーションする
+            'files.*.image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+
             // 配列でも指定できるその際はパイプ文字をカンマに置き換える必要がある
-            // 'image' => ['image','mimes:jpg,jpeg,png','max:2048']
+            // 'image' => ['image','mimes:jpg,jpeg,png','max:2048'],
+            // 'files.*.image' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+
         ];
     }
     //エラーメッセージのカスタマイズ
@@ -1045,6 +1077,13 @@ class YouAreFormRequest extends FormRequest {
         ];
     }
 }
+
+```
+
+画像を配列でアップロードする際の設定
+
+```html
+<input type="file" id="imgae" name="files[][image]" multiple accept="image/png,image/jpeg,image/jpg">
 ```
 
 バリデーションを利用する
