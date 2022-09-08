@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
-class OwnerSeeder extends Seeder {
+class ImageSeeder extends Seeder {
     /**
      * Run the database seeds.
      *
@@ -14,11 +14,11 @@ class OwnerSeeder extends Seeder {
      */
     public function run() {
         for ($i = 1; $i < 7; $i++) {
-            DB::table('owners')->insert([
+            DB::table('images')->insert([
                 [
-                    'name' => "test{$i}",
-                    'email' => "test${i}@test.com",
-                    'password' => Hash::make('password123'),
+                    'owner_id' => $i,
+                    'filename' => "sample${i}.jpg",
+                    'title' => null,
                     'created_at' => '2022/01/01 00:00:00'
                 ]
             ]);
