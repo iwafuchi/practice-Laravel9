@@ -48,6 +48,7 @@ php artisan config:clear
 php artisan cache:clear
 
 ## インストール後の実施事項
+
 画像のダミーデータはpublic/imagesフォルダ内にsample1.jsg~sample6.jpgとして保存しています。  
 php artisan storage:linkでstorageフォルダにリンク後、storage/app/public/productsフォルダ内に保存すると表示されます。
 
