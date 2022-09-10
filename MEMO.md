@@ -857,6 +857,7 @@ return new class extends Migration {
             $table->id();
             // foreignIdで外部キー制約を付与する
             // Laravelのテーブル名の規則に従いownersテーブルのidカラムを参照するにはowner_idと定義する
+            // _(アンダーバー)より前をテーブル名として判定される
             // テーブル名が規則と一致しない場合は、引数としてconstrainedメソッドに渡すことでテーブル名を指定出来る
             $table->foreignId('owner_id')
                 ->constrained()
