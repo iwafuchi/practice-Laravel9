@@ -847,7 +847,9 @@ function test() {
 
 モジュールを作成して読み込むパターンも追記する
 
-### migration 外部キー制約の付与
+### migration forginId
+
+外部キー制約を付与する
 
 ```php
 return new class extends Migration {
