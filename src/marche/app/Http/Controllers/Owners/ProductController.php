@@ -3,18 +3,38 @@
 namespace App\Http\Controllers\Owners;
 
 use App\Http\Controllers\Controller;
+use App\Models\Image;
+use App\Models\Owner;
+use App\Models\Product;
+use App\Models\SecondaryCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class ProductController extends Controller
-{
+class ProductController extends Controller {
+    public function __construct() {
+        $this->middleware('auth:owners');
+
+        $this->middleware(function ($request, $next) {
+            $id = $request->route()->parameter('product');
+            if (!is_null($id)) {
+                $productOwnerId = Product::findOrFail($id)->shop->owner->id;
+                $productId = (int)$productOwnerId;
+                if ($productId !== Auth::id()) {
+                    abort(404);
+                }
+            }
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index() {
+        $products = Owner::findOrFail(Auth::id())->shop->product;
+        dd(Owner::findOrFail(Auth::id())->shop, Owner::findOrFail(Auth::id())->image, $products);
+        return view('owners.products.index', compact('products'));
     }
 
     /**
@@ -22,8 +42,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -33,8 +52,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -44,8 +62,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -55,8 +72,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
 
@@ -67,8 +83,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
     }
 
@@ -78,8 +93,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
 }

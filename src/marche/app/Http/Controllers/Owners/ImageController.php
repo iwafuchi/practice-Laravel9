@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Owners;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UploadImageRequest;
+use App\Models\Image;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Image;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\UploadImageRequest;
-use App\Services\ImageService;
-use DragonCode\Contracts\Cache\Store;
 
 class ImageController extends Controller {
     public function __construct() {
@@ -27,6 +26,7 @@ class ImageController extends Controller {
             return $next($request);
         });
     }
+
     /**
      * Display a listing of the resource.
      *

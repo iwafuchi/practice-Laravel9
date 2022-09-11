@@ -16,7 +16,7 @@ class ImageSeeder extends Seeder {
         for ($i = 1; $i < 7; $i++) {
             DB::table('images')->insert([
                 [
-                    'owner_id' => $i,
+                    'owner_id' => 1,
                     'filename' => "sample${i}.jpg",
                     'title' => null,
                     'created_at' => '2022/01/01 00:00:00'
