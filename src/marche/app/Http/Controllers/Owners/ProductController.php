@@ -33,7 +33,6 @@ class ProductController extends Controller {
      */
     public function index() {
         $products = Owner::findOrFail(Auth::id())->shop->product;
-        dd(Owner::findOrFail(Auth::id())->shop, Owner::findOrFail(Auth::id())->image, $products);
         return view('owners.products.index', compact('products'));
     }
 
