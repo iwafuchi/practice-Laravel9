@@ -875,7 +875,11 @@ return new class extends Migration {
 
 ### Eloquant relation
 
+詳しくは[Laravel-9 eloquent-relationships](https://readouble.com/laravel/9.x/ja/eloquent-relationships.html#one-to-one)を参照する  
+外部キーがfoo_idでない場合の定義の方法等が記載されている
+
 ```php
+//1対1の定義
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class Owner extends Authenticatable{
@@ -887,16 +891,29 @@ class Owner extends Authenticatable{
     }
 }
 
+//逆の関係の定義
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Owner;
 class Shop extends Model {
     use HasFactory;
 
-    //Shop側からOwnerモデルへ逆アクセスするメソッドを定義する
+    //ShopモデルからOwnerモデルへ逆アクセスするメソッドを定義する
     public function Owner() {
         //Owner_idカラムと一致するidを持つShopモデルのレコードを返す
         return $this->belongsTo(Owner::class);
+    }
+
+    //Shopモデルの外部キーがshop_idでない場合、belongsToメソッドの第2引数にカスタムキーを指定する
+    public function Owner() {
+        //Owner_idカラムと一致するidを持つShopモデルのレコードを返す
+        return $this->belongsTo(Owner::class, 'foreign_key');
+    }
+
+    //Ownerモデルが主キーとしてidを使用しない場合、または別のカラムを使用して関連モデルを取得する場合は、
+    //belongsToメソッドの第3引数にOwnerテーブルのカスタムキーを指定する
+    public function Owner() {
+        //Owner_idカラムと一致するidを持つShopモデルのレコードを返す
+        return $this->belongsTo(Owner::class, 'foreign_key', 'owner_key');
     }
 }
 
