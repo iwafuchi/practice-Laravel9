@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Owners\ShopController;
 use App\Http\Controllers\Owners\ImageController;
+use App\Http\Controllers\Owners\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,10 @@ Route::prefix('shops')
     });
 
 Route::resource('images', ImageController::class)
+    ->middleware(['auth:owners'])
+    ->except(['show']);
+
+Route::resource('products', ProductController::class)
     ->middleware(['auth:owners'])
     ->except(['show']);
 
