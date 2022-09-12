@@ -1136,3 +1136,46 @@ class YouAreController extends Controller {
     }
 }
 ```
+
+### Eloquent RelationとEager Loading
+
+N+1問題が発生するリレーションへのプロパティアクセス
+
+```php
+
+//lazy loading
+use App\Models\Book;
+
+$books = Book::all();
+
+foreach ($books as $book) {
+    echo $book->author->name;
+}
+
+```
+
+N+1問題を解消するためにEager Loadingを使用する  
+
+```php
+
+//Eager loading
+$books = Book::with('author')->get();
+
+foreach ($books as $book) {
+    echo $book->author->name;
+}
+
+//複数リレーションのEagerロード
+$books = Book::with(['author', 'publisher'])->get();
+
+//ネストされたリレーションを取得する場合
+$books = Book::with('author.contacts')->get();
+
+//ネストされたリレーションを取得する場合(配列で指定する)
+$books = Book::with([
+    'author' => [
+        'contacts',
+        'publisher',
+    ],
+])->get();
+```
