@@ -1223,7 +1223,7 @@ class Stock extends Model {
 }
 ```
 
-### tailwindのbuttonでtype="button"を設定した際に背景色がtransparentになってしまう
+### tailwindでbuttonタグをtype="button"に設定すると背景色がtransparentになってしまう
 
 実行環境
 version:3.1.8
