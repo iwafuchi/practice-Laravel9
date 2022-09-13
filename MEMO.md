@@ -1179,3 +1179,46 @@ $books = Book::with([
     ],
 ])->get();
 ```
+
+### Eloquentでテーブルを明示的に定義する
+
+通常テーブルを指定しない場合はクラス名をスネークケースにしたものが、テーブル名として使用される。  
+下記の場合はPrimaryCategoryがprimary_categoriesとなる
+
+```php
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PrimaryCategory extends Model {
+    use HasFactory;
+
+    public function secondary() {
+        return $this->hasMany(SecondaryCategory::class);
+    }
+}
+
+```
+
+テーブル名を指定するには、モデルのtableプロパティを定義し、カスタムテーブル名を設定することもできる。  
+tableプロパティが定義されているとその値をテーブル名として使用する
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Stock extends Model {
+    use HasFactory;
+
+    //tableプロパティを定義しカスタムテーブル名を設定
+    protected $table = 't_stocks';
+}
+```
