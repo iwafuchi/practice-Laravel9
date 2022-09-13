@@ -47,6 +47,9 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        // $shops = Shop::authUserId()
+        //     ->select('id', 'name')
+        //     ->get();
         $shops = Shop::where('owner_id', Auth::id())
             ->select('id', 'name')
             ->get();
