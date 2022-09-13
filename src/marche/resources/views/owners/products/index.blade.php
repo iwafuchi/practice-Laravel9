@@ -15,17 +15,19 @@
                             class="text-white bg-purple-500 border-0 py-2 md:px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">新規登録</button>
                     </div>
                     <div class="flex flex-wrap">
-                        @foreach ($products as $product)
-                            <div class="w-1/4 p-2 md:p-4">
-                                <a href="{{ route('owners.products.edit', ['product' => $product->id]) }}">
-                                    <div class="border rounded-md p-2 md:p-4">
-                                        <x-thumbnail :filename="$product->imageFirst->filename ?? ''" type="products" />
-                                        {{-- <div class="text-gray-700">
-                                            {{ $product->name }}
-                                        </div> --}}
-                                    </div>
-                                </a>
-                            </div>
+                        @foreach ($owners as $owner)
+                            @foreach ($owner->shop->product as $product)
+                                <div class="w-1/4 p-2 md:p-4">
+                                    <a href="{{ route('owners.products.edit', ['product' => $product->id]) }}">
+                                        <div class="border rounded-md p-2 md:p-4">
+                                            <x-thumbnail :filename="$product->imageFirst->filename ?? ''" type="products" />
+                                            <div class="text-gray-700">
+                                                {{ $product->name }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
                         @endforeach
                     </div>
                     {{-- {{ $images->links() }} --}}

@@ -1136,3 +1136,121 @@ class YouAreController extends Controller {
     }
 }
 ```
+
+### Eloquent RelationとEager Loading
+
+N+1問題が発生するリレーションへのプロパティアクセス
+
+```php
+
+//lazy loading
+use App\Models\Book;
+
+$books = Book::all();
+
+foreach ($books as $book) {
+    echo $book->author->name;
+}
+
+```
+
+N+1問題を解消するためにEager Loadingを使用する  
+
+```php
+
+//Eager loading
+$books = Book::with('author')->get();
+
+foreach ($books as $book) {
+    echo $book->author->name;
+}
+
+//複数リレーションのEagerロード
+$books = Book::with(['author', 'publisher'])->get();
+
+//ネストされたリレーションを取得する場合
+$books = Book::with('author.contacts')->get();
+
+//ネストされたリレーションを取得する場合(配列で指定する)
+$books = Book::with([
+    'author' => [
+        'contacts',
+        'publisher',
+    ],
+])->get();
+```
+
+### Eloquentでテーブルを明示的に定義する
+
+通常テーブルを指定しない場合はクラス名をスネークケースにしたものが、テーブル名として使用される。  
+下記の場合はPrimaryCategoryがprimary_categoriesとなる
+
+```php
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PrimaryCategory extends Model {
+    use HasFactory;
+
+    public function secondary() {
+        return $this->hasMany(SecondaryCategory::class);
+    }
+}
+
+```
+
+テーブル名を指定するには、モデルのtableプロパティを定義し、カスタムテーブル名を設定することもできる。  
+tableプロパティが定義されているとその値をテーブル名として使用する
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Stock extends Model {
+    use HasFactory;
+
+    //tableプロパティを定義しカスタムテーブル名を設定
+    protected $table = 't_stocks';
+}
+```
+
+### tailwindでbuttonタグをtype="button"に設定すると背景色がtransparentになってしまう
+
+実行環境
+version:3.1.8
+chrome:105.0.5195.102
+
+micromodal.jsをインストールしcssを作成後、app.cssにインポートした際に発生。
+
+``` css
+/* micromodalを追加 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "micromodal";
+
+/* エラー解消 */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "micromodal";
+```
+
+micromodalを追加後npm run buildでエラー
+[vite:css] @import must precede all other statements (besides @charset or empty @layer)  
+2  |  @tailwind components;  
+3  |  @tailwind utilities;  
+4  |  @import "micromodal";  
+   |   ^  
+5  |  
+エラーに沿って@importを最初に読み込みbuildした際にボタンの背景色がtransparentに上書きされてしまった。  
+githubに該当するIssue:[preflight button reset in v3 inconsistent with v2 #6602](https://github.com/tailwindlabs/tailwindcss/issues/6602)を見つけたので修正する  

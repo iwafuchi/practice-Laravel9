@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Shop extends Model {
     use HasFactory;
@@ -22,5 +23,9 @@ class Shop extends Model {
 
     public function product() {
         return $this->hasMany(Product::class);
+    }
+
+    public function scopeAuthUserId($query) {
+        return $query->where('owner_id', Auth::id());
     }
 }
