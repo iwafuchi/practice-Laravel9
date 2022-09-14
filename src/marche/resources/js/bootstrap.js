@@ -16,9 +16,7 @@ import MicroModal from 'micromodal';  // es6 module
 MicroModal.init({
     disableScroll:true
 });
-import { viewImage } from './micromodal/view-image';
-import { deletePost, testAlert } from './asset/delete-post';
-// testAlert();
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
