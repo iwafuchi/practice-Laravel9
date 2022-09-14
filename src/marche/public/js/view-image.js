@@ -1,20 +1,22 @@
 'use strict'
 
 function viewImage() {
-    const images = document.querySelectorAll('.image') //全てのimageタグを取得
+    const images = document.querySelectorAll('.image');
+    console.log(images);
     images.forEach(image => {
-        image.addEventLister('click', function(e) {
-            const imageName = e.target.dataset.id.substr(0, 6);
-            const imageId = e.target.dataset.id.replace(imageName + '_', '');
-            const imageFile = e.target.dataset.file;
-            const imagePath = e.target.dataset.path;
-            const modal = e.target.dataset.modal;
+        image.addEventListener('click', (element) =>{
+            const imageName = element.target.dataset.id.substr(0, 6);
+            const imageId = element.target.dataset.id.replace(imageName + '_', '');
+            const imageFile = element.target.dataset.file;
+            const imagePath = element.target.dataset.path;
+            const modal = element.target.dataset.modal;
 
             document.getElementById(imageName + '_thumbnail').src = imagePath + '/' + imageFile;
             document.getElementById(imageName + '_hidden').value = imageId;
-            Micromodal.close(modal);
+            MicroModal.close(modal);
         })
     });
 }
 
-// viewImage();
+viewImage();
+
