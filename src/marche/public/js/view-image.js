@@ -2,9 +2,9 @@
 
 function viewImage() {
     const images = document.querySelectorAll('.image');
-    console.log(images);
     images.forEach(image => {
-        image.addEventListener('click', (element) =>{
+        console.log(image);
+        image.addEventListener('click', (element) => {
             const imageName = element.target.dataset.id.substr(0, 6);
             const imageId = element.target.dataset.id.replace(imageName + '_', '');
             const imageFile = element.target.dataset.file;
@@ -13,6 +13,8 @@ function viewImage() {
 
             document.getElementById(imageName + '_thumbnail').src = imagePath + '/' + imageFile;
             document.getElementById(imageName + '_hidden').value = imageId;
+            // console.log(imageName,imageId,modal);
+            console.log(element.target);
             MicroModal.close(modal);
         })
     });
