@@ -13,7 +13,6 @@ function viewImage() {
 
             document.getElementById(imageName + '_thumbnail').src = imagePath + '/' + imageFile;
             document.getElementById(imageName + '_hidden').value = imageId;
-            // console.log(imageName,imageId,modal);
             console.log(element.target);
             MicroModal.close(modal);
         })
