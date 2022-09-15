@@ -3,7 +3,6 @@
 function viewImage() {
     const images = document.querySelectorAll('.image');
     images.forEach(image => {
-        console.log(image);
         image.addEventListener('click', (element) => {
             const imageName = element.target.dataset.id.substr(0, 6);
             const imageId = element.target.dataset.id.replace(imageName + '_', '');
@@ -14,7 +13,7 @@ function viewImage() {
             document.getElementById(imageName + '_thumbnail').src = imagePath + '/' + imageFile;
             document.getElementById(imageName + '_hidden').value = imageId;
             console.log(element.target);
-            MicroModal.close(modal);
+            // MicroModal.close(modal);
         })
     });
 }
