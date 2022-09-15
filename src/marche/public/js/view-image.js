@@ -12,8 +12,11 @@ function viewImage() {
             document.getElementById(imageName + '_thumbnail').src = imagePath + '/' + imageFile;
             document.getElementById(imageName + '_hidden').value = imageId;
 
-            //MicroModal.close(modal);でモーダルを閉じるとimage4が正常に選択できなくなるのでis-openクラスを削除して対応する
-            //モーダル表示時にbodyのoverflow属性にhiddenが設定されるので削除する
+            /**
+             * MicroModal.close(modal);でモーダルを閉じるとimage4に適切な画像が配置出来なくなるのでis-openクラスを削除してモーダルを閉じる
+             * モーダルが開いている間はariaHiddenがfalseになるので閉じるタイミングでtrueに変更する
+             * モーダル表示時にbodyのoverflow属性にhiddenが設定されるので削除する
+             */
             const openModal = document.getElementsByClassName('is-open')[0];
             openModal.ariaHidden = true;
             openModal.classList.remove('is-open');
