@@ -27,7 +27,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <x-select-image name="image1" />
+                            <x-select-image :images="$images" name="image1" />
+                            <x-select-image :images="$images" name="image2" />
+                            <x-select-image :images="$images" name="image3" />
+                            <x-select-image :images="$images" name="image4" />
                             <div class="p-2 w-full mt-4 flex justify-around">
                                 <button onclick="location.href='{{ route('owners.products.index') }}'" type="button"
                                     class="flex mx-auto text-gray-50 bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">戻る</button>
@@ -40,4 +43,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('/js/view-image.js') }}"></script>
 </x-app-layout>

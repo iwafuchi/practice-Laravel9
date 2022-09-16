@@ -1237,12 +1237,6 @@ micromodal.jsをインストールしcssを作成後、app.cssにインポート
 @tailwind components;
 @tailwind utilities;
 @import "micromodal";
-
-/* エラー解消 */
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import "micromodal";
 ```
 
 micromodalを追加後npm run buildでエラー
@@ -1254,3 +1248,11 @@ micromodalを追加後npm run buildでエラー
 5  |  
 エラーに沿って@importを最初に読み込みbuildした際にボタンの背景色がtransparentに上書きされてしまった。  
 githubに該当するIssue:[preflight button reset in v3 inconsistent with v2 #6602](https://github.com/tailwindlabs/tailwindcss/issues/6602)を見つけたので修正する  
+
+```css
+/* エラー解消 */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "micromodal";
+```

@@ -49,5 +49,5 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('/js/test.js') }}"></script>
+    <script src="{{ asset('/js/delete-alert.js') }}"></script>
 </x-app-layout>
