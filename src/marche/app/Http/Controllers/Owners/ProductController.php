@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\PrimaryCategory;
+use App\Http\Requests\ProductStoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -74,22 +75,7 @@ class ProductController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        // dd($request);
-        $request->validate([
-            'name' => ['required', 'string', 'max:50'],
-            'information' => ['required', 'string', 'max:1000'],
-            'price' => ['required', 'integer'],
-            'sort_order' => ['nullable', 'integer'],
-            'quantity' => ['required', 'integer'],
-            'shop_id' => ['required', 'exists:shops,id'],
-            'category' => ['required', 'exists:secondary_categories,id'],
-            'image1' => ['nullable', 'exists:images,id'],
-            'image2' => ['nullable', 'exists:images,id'],
-            'image3' => ['nullable', 'exists:images,id'],
-            'image4' => ['nullable', 'exists:images,id'],
-            'is_selling' => ['required']
-        ]);
+    public function store(ProductStoreRequest $request) {
 
         try {
             DB::transaction(function () use ($request) {
