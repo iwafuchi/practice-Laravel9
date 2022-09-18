@@ -1256,3 +1256,34 @@ githubに該当するIssue:[preflight button reset in v3 inconsistent with v2 #6
 @import "tailwindcss/utilities";
 @import "micromodal";
 ```
+
+### ORMで頻出する検索条件をローカルクエリスコープに設定する
+
+頻出する条件に修正が必要になった際に出現箇所すべてに作業をすることは好ましくない。
+対策としてローカルクエリスコープとしモデル側で条件を管理する。
+
+```php
+//Contoroller
+Stock::where('product_id', $product->id)->sum('quantity');
+
+//ローカルクエリスコープを使用する
+Stock::productId($product->id)->sum('quantity');
+
+//Model
+class Stock extends Model {
+    use HasFactory;
+
+    protected $fillable = [
+        'product_id',
+        'type',
+        'quantity',
+    ];
+
+    protected $table = 't_stocks';
+
+    //ローカルスコープクエリを使用するにはscopeを先頭につけたメソッドを定義する
+    public function scopeProductId($query, $id) {
+        return $query->where('product_id', $id);
+    }
+}
+```
