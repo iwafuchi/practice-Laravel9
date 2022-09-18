@@ -118,7 +118,7 @@ class ProductController extends Controller {
     public function edit($id) {
         $product = Product::findOrFail($id);
 
-        $quantity = Stock::where('product_id', $product->id)->sum('quantity');
+        $quantity = Stock::productId($product->id)->sum('quantity');
 
         $shops = Shop::where('owner_id', Auth::id())
             ->select('id', 'name')

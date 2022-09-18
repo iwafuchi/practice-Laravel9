@@ -15,4 +15,8 @@ class Stock extends Model {
     ];
 
     protected $table = 't_stocks';
+
+    public function scopeProductId($query, $id) {
+        return $query->where('product_id', $id);
+    }
 }
