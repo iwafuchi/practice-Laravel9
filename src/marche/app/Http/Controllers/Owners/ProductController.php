@@ -52,11 +52,11 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $shops = Shop::where('owner_id', Auth::id())
+        $shops = Shop::ownerId(Auth::id())
             ->select('id', 'name')
             ->get();
 
-        $images = Image::where('owner_id', Auth::id())
+        $images = Image::ownerId(Auth::id())
             ->select('id', 'title', 'filename')
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -120,11 +120,11 @@ class ProductController extends Controller {
 
         $quantity = Stock::productId($product->id)->sum('quantity');
 
-        $shops = Shop::where('owner_id', Auth::id())
+        $shops = Shop::ownerId(Auth::id())
             ->select('id', 'name')
             ->get();
 
-        $images = Image::where('owner_id', Auth::id())
+        $images = Image::ownerId(Auth::id())
             ->select('id', 'title', 'filename')
             ->orderBy('updated_at', 'desc')
             ->get();
