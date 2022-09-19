@@ -1287,3 +1287,46 @@ class Stock extends Model {
     }
 }
 ```
+
+### 定数クラスを扱う
+
+Laravelで定数クラスを扱う  
+app配下にConstantsフォルダと定数クラスを作成する
+config/app.phpでaliases登録する
+
+```php
+<?php
+
+namespace App\Constants;
+
+class Product {
+    const PRODUCT_ADD = '1';
+    const PRODUCT_REDUCE = '2';
+
+    const PRODUCT_LIST = [
+        'add' => self::PRODUCT_ADD,
+        'reduce' => self::PRODUCT_REDUCE
+    ];
+}
+
+return [
+    //省略
+
+    'aliases' => Facade::defaultAliases()->merge([
+        //Constants
+        'ProductConstant' => App\Constants\Product::class,
+    ])->toArray(),
+]
+
+//Controller
+if ($request->type === \ProductConstant::PRODUCT_LIST['add']) {
+    //etc
+}
+if ($request->type === \ProductConstant::PRODUCT_LIST['reduce']) {
+    //etc
+}
+
+//blade
+<input type="radio" name="type" value="{{ \ProductConstant::PRODUCT_LIST['add'] }}" class="mr-2">増加
+<input type="radio" name="type" value="{{ \ProductConstant::PRODUCT_LIST['reduce'] }}" class="mr-2">削減
+```
