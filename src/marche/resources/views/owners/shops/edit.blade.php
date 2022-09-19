@@ -49,14 +49,14 @@
                                 <div class="relative flex justify-around">
                                     <div>
                                         <label>
-                                            <input type="radio" name="is_selling" value="1" checked
-                                                class="mr-2" @if ($shop->is_selling === 1) { checked} @endif>販売中
+                                            <input type="radio" name="is_selling" value="1" class="mr-2"
+                                                @if ($shop->is_selling === 1) { checked } @endif>販売中
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             <input type="radio" name="is_selling" value="0" class="mr-2"
-                                                @if ($shop->is_selling === 0) { checked} @endif>停止中
+                                                @if ($shop->is_selling === 0) { checked } @endif>停止中
                                         </label>
                                     </div>
                                 </div>

@@ -7,9 +7,14 @@ use App\Models\Image;
 use App\Models\Owner;
 use App\Models\Product;
 use App\Models\Shop;
+use App\Models\Stock;
 use App\Models\PrimaryCategory;
+use App\Http\Requests\ProductStoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ProductController extends Controller {
     public function __construct() {
@@ -47,9 +52,6 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        // $shops = Shop::authUserId()
-        //     ->select('id', 'name')
-        //     ->get();
         $shops = Shop::where('owner_id', Auth::id())
             ->select('id', 'name')
             ->get();
@@ -70,18 +72,41 @@ class ProductController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        dd($request);
-    }
+    public function store(ProductStoreRequest $request) {
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id) {
-        //
+        try {
+            DB::transaction(function () use ($request) {
+                $product = Product::create([
+                    'name' => $request->name,
+                    'information' => $request->information,
+                    'price' => $request->price,
+                    'sort_order' => $request->sort_order,
+                    'shop_id' => $request->shop_id,
+                    'secondary_category_id' => $request->category,
+                    'image1' => $request->image1,
+                    'image2' => $request->image2,
+                    'image3' => $request->image3,
+                    'image4' => $request->image4,
+                    'is_selling' => $request->is_selling
+                ]);
+
+                Stock::create([
+                    'product_id' => $product->id,
+                    'type' => 1,
+                    'quantity' => $request->quantity,
+                ]);
+            }, 2);
+        } catch (Exception $e) {
+            Log::error($e);
+            throw $e;
+        }
+
+        return redirect()
+            ->route('owners.products.index')
+            ->with([
+                'message' => '商品登録を実施しました',
+                'status' => 'info'
+            ]);
     }
 
     /**
@@ -91,7 +116,25 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        //
+        $product = Product::findOrFail($id);
+
+        $quantity = Stock::productId($product->id)->sum('quantity');
+
+        $shops = Shop::where('owner_id', Auth::id())
+            ->select('id', 'name')
+            ->get();
+
+        $images = Image::where('owner_id', Auth::id())
+            ->select('id', 'title', 'filename')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $categories = PrimaryCategory::with('secondary')->get();
+
+        return view(
+            'owners.products.edit',
+            compact('product', 'quantity', 'shops', 'images', 'categories')
+        );
     }
 
     /**
