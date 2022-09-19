@@ -25,7 +25,7 @@ class Shop extends Model {
         return $this->hasMany(Product::class);
     }
 
-    public function scopeAuthUserId($query) {
-        return $query->where('owner_id', Auth::id());
+    public function scopeOwnerId($query, $id) {
+        return $query->where('owner_id', $id);
     }
 }
