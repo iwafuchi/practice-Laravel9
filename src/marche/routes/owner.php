@@ -16,10 +16,6 @@ use App\Http\Controllers\Owners\ProductController;
 |
 */
 
-Route::get('/', function () {
-    return view('owners.welcome');
-});
-
 Route::prefix('shops')
     ->middleware('auth:owners')
     ->group(function () {
