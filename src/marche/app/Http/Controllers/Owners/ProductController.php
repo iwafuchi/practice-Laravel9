@@ -166,11 +166,11 @@ class ProductController extends Controller {
                 $product->update($request->all());
                 $product->save();
 
-                if ($request->type === '1') {
+                if ($request->type === \ProductConstant::PRODUCT_LIST['add']) {
                     $newQuantity = $request->quantity;
                 }
 
-                if ($request->type === '2') {
+                if ($request->type === \ProductConstant::PRODUCT_LIST['reduce']) {
                     $newQuantity = $request->quantity * -1;
                 }
 

@@ -60,13 +60,15 @@
                                 <div class="relative flex justify-around">
                                     <div>
                                         <label>
-                                            <input type="radio" name="type" value="1" checked
+                                            <input type="radio" name="type"
+                                                value="{{ \ProductConstant::PRODUCT_LIST['add'] }}" checked
                                                 class="mr-2">追加
                                         </label>
                                     </div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="type" value="2" class="mr-2">削減
+                                            <input type="radio" name="type"
+                                                value="{{ \ProductConstant::PRODUCT_LIST['reduce'] }}" class="mr-2">削減
                                         </label>
                                     </div>
                                 </div>
