@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\PrimaryCategory;
-use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -72,7 +72,7 @@ class ProductController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductStoreRequest $request) {
+    public function store(ProductRequest $request) {
 
         try {
             DB::transaction(function () use ($request) {
@@ -144,8 +144,53 @@ class ProductController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        //
+    public function update(ProductRequest $request, $id) {
+        $request->validate([
+            'current_quantity' => ['required', 'integer']
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        $quantity = Stock::productId($product->id)->sum('quantity');
+
+        if ($request->current_quantity !== $quantity) {
+            return redirect()->route('owners.products.edit', ['product' => $id])
+                ->with([
+                    'message' => '在庫数が変更されています。再度確認して下さい',
+                    'status' => 'alert'
+                ]);
+        }
+
+        try {
+            DB::transaction(function () use ($request, $product) {
+                $product->update($request->all());
+                $product->save();
+
+                if ($request->type === '1') {
+                    $newQuantity = $request->quantity;
+                }
+
+                if ($request->type === '2') {
+                    $newQuantity = $request->quantity * -1;
+                }
+
+                Stock::create([
+                    'product_id' => $product->id,
+                    'type' => $request->type,
+                    'quantity' => $newQuantity,
+                ]);
+            }, 2);
+        } catch (Exception $e) {
+            Log::error($e);
+            throw $e;
+        }
+
+        return redirect()
+            ->route('owners.products.index')
+            ->with([
+                'message' => '商品情報を更新しました',
+                'status' => 'info'
+            ]);
     }
 
     /**
