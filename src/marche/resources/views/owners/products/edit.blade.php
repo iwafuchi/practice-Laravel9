@@ -147,9 +147,19 @@
                             </div>
                         </div>
                     </form>
+                    <form id="delete_{{ $product->id }}" method="POST"
+                        action="{{ route('owners.products.destroy', ['product' => $product->id]) }}">
+                        @csrf
+                        @method('delete')
+                        <div class="p-2 w-full mt-4 flex justify-around">
+                            <button type="button" data-id="{{ $product->id }}" onclick="deletePost(this)"
+                                class="flex mx-auto text-white bg-red-500 border-0 py-2 md:px-6 focus:outline-none hover:bg-red-600 rounded ">削除</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     <script src="{{ asset('/js/view-image.js') }}"></script>
+    <script src="{{ asset('/js/delete-alert.js') }}"></script>
 </x-app-layout>
