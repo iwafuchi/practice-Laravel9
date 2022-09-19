@@ -33,7 +33,7 @@ class ImageController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $images = Image::where('owner_id', Auth::id())
+        $images = Image::ownerId(Auth::id())
             ->orderby('updated_at', 'desc')
             ->paginate(20);
 
