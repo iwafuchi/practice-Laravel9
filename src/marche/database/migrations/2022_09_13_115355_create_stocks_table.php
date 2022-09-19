@@ -19,6 +19,7 @@ return new class extends Migration {
                 ->cascadeOnDelete('cascade');
             $table->tinyInteger('type');
             $table->integer('quantity');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

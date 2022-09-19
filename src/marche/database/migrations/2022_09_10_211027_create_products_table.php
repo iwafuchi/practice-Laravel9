@@ -38,6 +38,7 @@ return new class extends Migration {
                 ->nullable()
                 ->constrained('images');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
