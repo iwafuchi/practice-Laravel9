@@ -17,4 +17,8 @@ class Image extends Model {
     public function Owner() {
         return $this->belongsTo(Owner::class);
     }
+
+    public function scopeOwnerId($query, $id) {
+        return $query->where('owner_id', $id);
+    }
 }
