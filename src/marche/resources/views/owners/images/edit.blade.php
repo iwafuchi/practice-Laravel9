@@ -49,7 +49,7 @@
                                 <div class="p-3 w-1/2">
                                 </div>
                                 <div class="p-3 w-1/2 flex justify-around">
-                                    <button type="button" data-id="{{ $image->id }}" onclick="deletePost(this)"
+                                    <button type="button" id="delete" data-id="{{ $image->id }}"
                                         class="mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
                                 </div>
                             </div>
