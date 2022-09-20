@@ -1360,3 +1360,53 @@ if ($request->type === \ProductConstant::PRODUCT_LIST['reduce']) {
 ### Laravel bladeでのXSS対策
 
 {{  }}で囲んだphpコードは自動的にhtmlentites関数をかけた値で出力される。
+
+### viteでJavascriptファイルをバンドルする
+
+bootstrap.jsで汎用的なscriptをimportしてapp.jsでimportする。
+特定のページでしか使用しないものはvite.config.jsでパスを設定する。
+
+```js
+//foo.js
+'use strict';
+function foo() {
+    alert('foo');
+}
+foo();
+
+//bar.js
+'use strict';
+function bar() {
+    alert('bar');
+}
+bar();
+
+//vite.config.js
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                //追加したいjavascriptファイルのパス設定
+                'resources/js/foo.js',
+                'resources/js/bar.js',
+            ],
+            refresh: true,
+        }),
+    ],
+});
+
+```
+
+npm run buildでpublic/assetsにコンパイルされたファイルが出力される。
+
+```php
+//bladeファイルから読み込む
+@vite('resources/js/foo.js')
+//複数読み込む場合は配列で設定する
+@vite(['resources/js/foo.js', 'resources/js/bar.js'])
+```
