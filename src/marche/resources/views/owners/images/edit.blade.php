@@ -27,16 +27,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col">
-                            <div class="flex justify-around">
-                                <div class="p-3 w-1/2 flex justify-around">
-                                    <button onclick="location.href='{{ route('owners.images.index') }}'" type="button"
-                                        class="mx-auto text-gray-50 bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">戻る</button>
-                                </div>
-                                <div class="p-3 w-1/2 flex justify-around">
-                                    <button type="submit"
-                                        class="mx-auto text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">更新</button>
-                                </div>
+                        <div class="flex">
+                            <div class="p-3 w-1/2 flex justify-center">
+                                <button onclick="location.href='{{ route('owners.images.index') }}'" type="button"
+                                    class="mx-auto text-gray-50 bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">戻る</button>
+                            </div>
+                            <div class="p-3 w-1/2 flex justify-center">
+                                <button type="submit"
+                                    class="mx-auto text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">更新</button>
                             </div>
                         </div>
                     </form>
@@ -44,14 +42,12 @@
                         action="{{ route('owners.images.destroy', ['image' => $image->id]) }}">
                         @csrf
                         @method('delete')
-                        <div class="flex flex-col">
-                            <div class="flex justify-around">
-                                <div class="p-3 w-1/2">
-                                </div>
-                                <div class="p-3 w-1/2 flex justify-around">
-                                    <button type="button" id="delete" data-id="{{ $image->id }}"
-                                        class="mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
-                                </div>
+                        <div class="flex">
+                            <div class="p-3 w-1/2">
+                            </div>
+                            <div class="p-3 w-1/2 flex justify-center">
+                                <button type="button" id="delete" data-id="{{ $image->id }}"
+                                    class="mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
                             </div>
                         </div>
                     </form>
