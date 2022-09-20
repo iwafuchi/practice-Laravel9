@@ -1330,3 +1330,33 @@ if ($request->type === \ProductConstant::PRODUCT_LIST['reduce']) {
 <input type="radio" name="type" value="{{ \ProductConstant::PRODUCT_LIST['add'] }}" class="mr-2">増加
 <input type="radio" name="type" value="{{ \ProductConstant::PRODUCT_LIST['reduce'] }}" class="mr-2">削減
 ```
+
+### tailwindで横２分割して中央揃え
+
+```html
+<!-- 両方ともコンテンツが存在する場合 -->
+<div class="flex justify-around">
+    <div class="p-3 flex justify-center">
+        <button onclick="location.href='{{ route('owners.images.index') }}'" type="button"
+            class="mx-auto text-gray-50 bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">戻る</button>
+    </div>
+    <div class="p-3 flex justify-center">
+        <button type="submit"
+            class="mx-auto text-white bg-purple-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg">更新</button>
+    </div>
+</div>
+
+<!-- 片方のコンテンツが無い場合 -->
+<div class="flex">
+    <div class="p-3 w-1/2">
+    </div>
+    <div class="p-3 w-1/2 flex justify-center">
+        <button type="button" id="delete" data-id="{{ $image->id }}"
+            class="mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
+    </div>
+</div>
+```
+
+### Laravel bladeでのXSS対策
+
+{{  }}で囲んだphpコードは自動的にhtmlentites関数をかけた値で出力される。
