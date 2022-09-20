@@ -56,5 +56,5 @@
         </div>
     </div>
     </div>
-    <script src="{{ asset('/js/delete-alert.js') }}"></script>
+    @vite('resources/js/asset/delete-alert.js')
 </x-app-layout>
