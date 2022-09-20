@@ -707,7 +707,7 @@ class OwnersController extends Controller
         $owner->password = $request->password;
         $owner->save();
 
-        //fillableをチェックしつつ短く書く
+        //fillableで設定した値をすべて更新する
         $image->fill($request->all())->save();
 
         return redirect()->route('owner.edit', $owner);
