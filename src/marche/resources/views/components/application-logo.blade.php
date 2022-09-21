@@ -1,1 +1,1 @@
-<img src="{{ asset('storage/logo_transparent.png') }}">
+<img src="{{ Vite::asset('resources/images/logo.png') }}">

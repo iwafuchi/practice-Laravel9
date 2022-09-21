@@ -1410,3 +1410,40 @@ npm run buildでpublic/assetsにコンパイルされたファイルが出力さ
 //複数読み込む場合は配列で設定する
 @vite(['resources/js/foo.js', 'resources/js/bar.js'])
 ```
+
+### Laravel Viteで静的アセットのバンドルを行う
+
+```js
+//resources/js/app/js
+import './bootstrap';
+
+import Alpine from 'alpinejs';
+
+//resources/images以下の画像を全てコンパイルする
+import.meta.glob([
+    '../images/**',
+  ]);
+```
+
+bladeファイルでコンパイルされた画像を使用する
+
+```php
+//logo.blade.php
+<img src="{{ Vite::asset('resources/images/logo.png') }}">
+```
+
+Viteファサードがうまく動作しない場合はconfig/app.jsのaliasesにViteを追加しcomposer updateとnpm updateを試す
+
+```php
+<?php
+
+use Illuminate\Support\Facades\Facade;
+
+return [
+    //etc
+
+    'aliases' => Facade::defaultAliases()->merge([
+        //Vite
+        'Vite' => \Illuminate\Support\Facades\Vite::class,
+    ])->toArray(),
+```

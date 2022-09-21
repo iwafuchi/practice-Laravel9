@@ -8,7 +8,7 @@ if ($type === 'products') {
 @endphp
 <div>
     @if (empty($filename))
-        <img src="{{ asset('images/no_image.jpg') }}">
+        <img src="{{ Vite::asset('resources/images/no_image.jpg') }}">
     @else
         <img src="{{ asset($path . $filename) }}">
     @endif
