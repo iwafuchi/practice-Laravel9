@@ -16,19 +16,9 @@ use App\Http\Controllers\Users\ItemController;
 |
 */
 
-Route::get('/', function () {
-    return view('users.welcome');
-});
-
-// Route::middleware('auth:users')
-//     ->group(function () {
-//         Route::get('/', [ItemController::class, 'index'])
-//             ->name('items.index');
-//     });
-
-// Route::resource('/', ItemController::class)
-//     ->middleware(['auth:users'])
-//     ->only(['index']);
+Route::resource('/', ItemController::class)
+    ->middleware(['auth:users'])
+    ->only(['index']);
 
 // Route::get('/dashboard', function () {
 //     return view('users.dashboard');
