@@ -1361,6 +1361,56 @@ if ($request->type === \ProductConstant::PRODUCT_LIST['reduce']) {
 
 {{  }}で囲んだphpコードは自動的にhtmlentites関数をかけた値で出力される。
 
+### logout時のリダイレクト先を変更する
+
+```php
+//route
+Route::middleware('auth:owners')->group(function () {
+    //etc
+
+    //logout時にAuthenticatedSessionControllerのdestroyメソッドへアクセスしている
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+});
+
+Route::get('/', function () {
+    return view('owners.welcome');
+});
+
+//AuthenticatedSessionController
+<?php
+
+namespace App\Http\Controllers\Owners\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class AuthenticatedSessionController extends Controller {
+    /**
+     * Destroy an authenticated session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Request $request) {
+        Auth::guard('owners')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        // デフォルトのurlだとwelcomページへ遷移する
+        // return redirect('/owner);
+
+        // urlを変更しログアウト時にログイン画面へ遷移させる       
+        return redirect('/owner/login');
+    }
+}
+```
+
 ### viteでJavascriptファイルをバンドルする
 
 bootstrap.jsで汎用的なscriptをimportしてapp.jsでimportする。

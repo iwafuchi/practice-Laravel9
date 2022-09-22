@@ -3,7 +3,9 @@
         ユーザー用
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-red-500" />
+                <div class="w-12">
+                    <x-application-logo class="w-20 h-20 fill-current text-red-500" />
+                </div>
             </a>
         </x-slot>
 
