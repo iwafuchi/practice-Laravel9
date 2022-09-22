@@ -1497,3 +1497,90 @@ return [
         'Vite' => \Illuminate\Support\Facades\Vite::class,
     ])->toArray(),
 ```
+
+### Faker&Factory
+
+Fakerを使用したデータをFactoryに設定することでダミーデータをテーブルに挿入する事ができるライブラリ  
+これらの[Fakerプロパティ](https://faker.readthedocs.io/en/master/locales/ja_JP.html)が利用できる  
+
+日本語のダミーデータを利用するにはconfig/app.phpのfaker_localeの値をja_JPに設定する必要がある
+
+```php
+//config/app.php
+<?php
+
+use Illuminate\Support\Facades\Facade;
+return {
+    //デフォルト
+    'faker_locale' => 'en_US',
+    //変更後
+    'faker_locale' => 'ja_JP',
+}
+
+//factory作成
+php artisan make:factory YourAreModelFactory --model=YourAreModel
+
+//YourAreModel
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Owner;
+
+class YourAreModel extends Model {
+    //ModelクラスでHasFactory読み込むことでFactoryとして使用出来る
+    use HasFactory;
+    //etc
+}
+
+//YourAreFactory
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ */
+class YourAreFactory extends Factory {
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition() {
+        return [
+            'name' => $this->faker->name,
+            'email' => $this->faker->safeEmail,
+        ];
+    }
+}
+
+//DatabaseSeederに設定する
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\YourAreModel;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder {
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run() {
+        $this->call([
+            //etc
+        ]);
+        YourAreModel::factory(100)->create();
+    }
+}
+```
+
+Factoryを使用する際に外部キーカラムが存在する場合は、runメソッドで先に作成しておく必要がある  
