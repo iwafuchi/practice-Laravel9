@@ -214,8 +214,6 @@ return [
         'InterventionImage' => Intervention\Image\Facades\Image::class,
         //Constants
         'ProductConstant' => App\Constants\Product::class,
-        //Vite
-        'Vite' => \Illuminate\Support\Facades\Vite::class,
     ])->toArray(),
 
 ];
