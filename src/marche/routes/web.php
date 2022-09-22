@@ -16,13 +16,11 @@ use App\Http\Controllers\Users\ItemController;
 |
 */
 
-Route::resource('/', ItemController::class)
-    ->middleware(['auth:users'])
-    ->only(['index']);
-
-// Route::get('/dashboard', function () {
-//     return view('users.dashboard');
-// })->middleware(['auth:users'])->name('dashboard');
+Route::middleware('auth:users')
+    ->group(function () {
+        Route::get('/', [ItemController::class, 'index'])
+            ->name('items.index');
+    });
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
 Route::get('/component-test2', [ComponentTestController::class, 'showComponent2']);

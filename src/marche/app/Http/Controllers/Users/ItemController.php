@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller {
@@ -12,7 +13,10 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('users.index');
+
+        $products = Product::all();
+
+        return view('users.index', compact('products'));
     }
 
     /**
