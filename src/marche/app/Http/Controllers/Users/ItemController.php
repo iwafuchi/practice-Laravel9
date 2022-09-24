@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller {
+    public function __construct() {
+        $this->middleware('auth:users');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -80,7 +83,8 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        //
+        $product = Product::findOrfail($id);
+        return view('users.show', compact('product'));
     }
 
     /**
