@@ -21,7 +21,7 @@ class ItemController extends Controller {
                 DB::raw('sum(quantity) as quantity')
             )
             ->groupBy('product_id')
-            ->having('quantity', '>', 1);
+            ->having('quantity', '>=', 1);
 
         $products = DB::table('products')
             ->joinSub($stocks, 'stock', function ($join) {
