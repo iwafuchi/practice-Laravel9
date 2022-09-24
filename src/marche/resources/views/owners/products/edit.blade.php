@@ -166,5 +166,5 @@
             </div>
         </div>
     </div>
-    @vite(['resources/js/asset/delete-alert.js', 'resources/js/asset/micromodal/view-image.js'])
+    @vite(['resources/js/asset/alert/delete-alert.js', 'resources/js/asset/modal/view-image.js'])
 </x-app-layout>
