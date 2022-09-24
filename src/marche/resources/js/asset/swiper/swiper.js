@@ -5,8 +5,6 @@
   import 'swiper/css/navigation';
   import 'swiper/css/pagination';
 
-// document.addEventListener('DOMContentLoaded', () => {
-    // init Swiper:
 const swiper = new Swiper('.swiper', {
         //モジュールをSwiperで使用可能にする
         modules: [Navigation, Pagination, Scrollbar],
@@ -36,4 +34,3 @@ const swiper = new Swiper('.swiper', {
         observeParents: true,
         parallax: true,
     });
-// })
