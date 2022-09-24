@@ -12,7 +12,47 @@
                     <div class="md:flex md:justify-around">
                         {{-- {{ dd($product) }} --}}
                         <div class="md:w-1/2">
-                            <x-thumbnail :filename="$product->imageFirst->filename ?? ''" type="products" />
+                            {{-- <x-thumbnail :filename="$product->imageFirst->filename ?? ''" type="products" /> --}}
+                            <div class="swiper">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        @if ($product->imageFirst->filename !== null)
+                                            <img
+                                                src="{{ asset('storage/products/' . $product->imageFirst->filename) }}">
+                                        @else
+                                            <img src="">
+                                        @endif
+                                    </div>
+                                    <div class="swiper-slide">
+                                        @if ($product->imageSecond->filename !== null)
+                                            <img
+                                                src="{{ asset('storage/products/' . $product->imageSecond->filename) }}">
+                                        @else
+                                            <img src="">
+                                        @endif
+                                    </div>
+                                    <div class="swiper-slide">
+                                        @if ($product->imageThird->filename !== null)
+                                            <img
+                                                src="{{ asset('storage/products/' . $product->imageThird->filename) }}">
+                                        @else
+                                            <img src="">
+                                        @endif
+                                    </div>
+                                    <div class="swiper-slide">
+                                        @if ($product->imageForth->filename !== null)
+                                            <img
+                                                src="{{ asset('storage/products/' . $product->imageForth->filename) }}">
+                                        @else
+                                            <img src="">
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-scrollbar"></div>
+                            </div>
                         </div>
                         <div class="md:w-1/2 ml-4">
                             <h2 class="text-sm title-font text-gray-500 tracking-widest mb-1">
@@ -47,4 +87,5 @@
             </div>
         </div>
     </div>
+    @vite('resources/js/asset/swiper/swiper.js')
 </x-app-layout>
