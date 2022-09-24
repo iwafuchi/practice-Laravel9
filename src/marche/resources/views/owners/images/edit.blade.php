@@ -56,5 +56,5 @@
         </div>
     </div>
     </div>
-    @vite('resources/js/asset/delete-alert.js')
+    @vite('resources/js/asset/alert/delete-alert.js')
 </x-app-layout>
