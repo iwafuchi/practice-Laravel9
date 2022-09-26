@@ -19,6 +19,6 @@ class Cart extends Model {
     }
 
     public function scopeProductId($query, $id) {
-        return $query->where('user_id', $id);
+        return $query->where('product_id', $id);
     }
 }
