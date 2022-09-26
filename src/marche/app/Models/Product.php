@@ -43,7 +43,11 @@ class Product extends Model {
     public function imageForth() {
         return $this->belongsTo(Image::class, 'image4', 'id');
     }
-    public function stock() {
+    public function stocks() {
         return $this->hasMany(Stock::class);
+    }
+    public function users() {
+        return $this->belongsToMany(User::class, 'carts')
+            ->withPivot(['id', 'quantity']);
     }
 }
