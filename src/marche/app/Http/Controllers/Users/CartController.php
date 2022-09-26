@@ -44,6 +44,14 @@ class CartController extends Controller {
         return view('users.cart', compact('products', 'totalPrice'));
     }
 
+    public function delete($id) {
+        Cart::productId($id)
+            ->userId(Auth::id())
+            ->delete();
+
+        return redirect()->route('users.cart.index');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
