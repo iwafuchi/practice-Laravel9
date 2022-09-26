@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use App\Models\User;
 
 class CartController extends Controller {
 
@@ -24,7 +25,6 @@ class CartController extends Controller {
                 'quantity' => $request->quantity
             ]);
         }
-        dd('test');
         return redirect()->route('users.cart.index');
     }
     /**
@@ -33,7 +33,15 @@ class CartController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        //
+        $user = User::findOrFail(Auth::id());
+        $products = $user->products;
+        $totalPrice = 0;
+
+        foreach ($products as $product) {
+            $totalPrice += $product->price * $product->pivot->quantity;
+        }
+
+        return view('users.cart', compact('products', 'totalPrice'));
     }
 
     /**
