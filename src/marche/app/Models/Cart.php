@@ -13,4 +13,12 @@ class Cart extends Model {
         'product_id',
         'quantity',
     ];
+
+    public function scopeUserId($query, $id) {
+        return $query->where('user_id', $id);
+    }
+
+    public function scopeProductId($query, $id) {
+        return $query->where('user_id', $id);
+    }
 }

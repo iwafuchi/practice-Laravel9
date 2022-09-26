@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ComponentTestController;
 use App\Http\Controllers\LifeCycleTestController;
 use App\Http\Controllers\Users\ItemController;
+use App\Http\Controllers\Users\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,13 @@ Route::middleware('auth:users')
             ->name('items.index');
         Route::get('show/{item}', [ItemController::class, 'show'])
             ->name('items.show');
+    });
+
+Route::prefix('cart')
+    ->middleware('auth:users')
+    ->group(function () {
+        Route::post('add', [CartController::class, 'add'])
+            ->name('cart.add');
     });
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
