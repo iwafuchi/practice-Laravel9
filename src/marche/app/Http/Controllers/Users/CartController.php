@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Stock;
 
 class CartController extends Controller {
 
@@ -65,14 +66,6 @@ class CartController extends Controller {
                 return redirect()->route('users.cart.index');
             }
 
-            // $lineItem = [
-            //     'name' => $product->name,
-            //     'description' => $product->information,
-            //     'amount' => $product->price,
-            //     'currency' => 'jpy',
-            //     'quantity' => $product->pivot->quantity,
-            // ];
-
             $lineItem = [
                 'price_data' => [
                     'unit_amount' => $product->price,
@@ -84,16 +77,25 @@ class CartController extends Controller {
                 ],
                 'quantity' => $product->pivot->quantity,
             ];
-
             array_push($lineItems, $lineItem);
         }
+        foreach ($products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => \ProductConstant::PRODUCT_LIST['reduce'],
+                'quantity' => $product->pivot->quantity * -1,
+            ]);
+        }
+
+        // dd('test');
+
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         $session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [$lineItems],
             'mode' => 'payment',
-            'success_url' => rotue('users.cart.seccess'),
+            'success_url' => route('users.items.index'),
             'cancel_url' => route('users.cart.index'),
         ]);
 
