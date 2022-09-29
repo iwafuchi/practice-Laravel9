@@ -87,78 +87,36 @@ class CartController extends Controller {
             ]);
         }
 
-        // dd('test');
-
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         $session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [$lineItems],
             'mode' => 'payment',
-            'success_url' => route('users.items.index'),
-            'cancel_url' => route('users.cart.index'),
+            'success_url' => route('users.cart.success'),
+            'cancel_url' => route('users.cart.cancel'),
         ]);
 
         return redirect($session->url, 303);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create() {
-        //
+    public function success() {
+        Cart::userId(Auth::id())->delete();
+
+        return redirect()->route('users.items.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
-        //
-    }
+    public function cancel() {
+        $user = User::findOrFail(Auth::id());
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id) {
-        //
-    }
+        foreach ($user->products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => \ProductConstant::PRODUCT_LIST['cancel'],
+                'quantity' => $product->pivot->quantity,
+            ]);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id) {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id) {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id) {
-        //
+        return redirect()->route('users.cart.index');
     }
 }

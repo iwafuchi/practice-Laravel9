@@ -36,6 +36,10 @@ Route::prefix('cart')
             ->name('cart.delete');
         Route::get('checkout', [CartController::class, 'checkout'])
             ->name('cart.checkout');
+        Route::get('success', [CartController::class, 'success'])
+            ->name('cart.success');
+        Route::get('cancel', [CartController::class, 'cancel'])
+            ->name('cart.cancel');
     });
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
