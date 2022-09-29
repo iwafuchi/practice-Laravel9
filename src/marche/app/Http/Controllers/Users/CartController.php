@@ -7,8 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Stock;
 
 class CartController extends Controller {
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index() {
+        $user = User::findOrFail(Auth::id());
+        $products = $user->products;
+        $totalPrice = 0;
+
+        foreach ($products as $product) {
+            $totalPrice += $product->price * $product->pivot->quantity;
+        }
+
+        return view('users.cart', compact('products', 'totalPrice'));
+    }
 
     public function add(Request $request) {
         $itemInCart = Cart::userId(Auth::id())
@@ -27,22 +45,6 @@ class CartController extends Controller {
         }
         return redirect()->route('users.cart.index');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() {
-        $user = User::findOrFail(Auth::id());
-        $products = $user->products;
-        $totalPrice = 0;
-
-        foreach ($products as $product) {
-            $totalPrice += $product->price * $product->pivot->quantity;
-        }
-
-        return view('users.cart', compact('products', 'totalPrice'));
-    }
 
     public function delete($id) {
         Cart::productId($id)
@@ -50,6 +52,54 @@ class CartController extends Controller {
             ->delete();
 
         return redirect()->route('users.cart.index');
+    }
+
+    public function checkout() {
+        $user = User::findOrFail(Auth::id());
+        $products = $user->products;
+
+        $lineItems = [];
+
+        foreach ($products as $product) {
+            $quantity = Stock::productId($product->id)->sum('quantity');
+            if ($product->pivot->quantity > $quantity) {
+                return redirect()->route('users.cart.index');
+            }
+
+            $lineItem = [
+                'price_data' => [
+                    'unit_amount' => $product->price,
+                    'currency' => 'jpy',
+                    'product_data' => [
+                        'name' => $product->name,
+                        'description' => $product->information,
+                    ],
+                ],
+                'quantity' => $product->pivot->quantity,
+            ];
+            array_push($lineItems, $lineItem);
+        }
+        foreach ($products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => \ProductConstant::PRODUCT_LIST['reduce'],
+                'quantity' => $product->pivot->quantity * -1,
+            ]);
+        }
+
+        // dd('test');
+
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [$lineItems],
+            'mode' => 'payment',
+            'success_url' => route('users.items.index'),
+            'cancel_url' => route('users.cart.index'),
+        ]);
+
+        return redirect($session->url, 303);
     }
 
     /**

@@ -42,10 +42,20 @@
                                         </button>
                                     </form>
                                 </div>
-
                             </div>
                         @endforeach
-                        <span>合計金額:{{ $totalPrice }}</span>
+                        <div class="my-2">
+                            小計: {{ number_format($totalPrice) }}<span
+                                class="text-sm
+                            text-gray-700">円(税込)</span>
+                        </div>
+                        <div class="flex justify-end">
+                            <button
+                                class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none
+                                hover:bg-indigo-600 rounded"
+                                onclick="location.href='{{ route('users.cart.checkout') }}'">購入する
+                            </button>
+                        </div>
                     @else
                         <span>カートに商品が入っていません</span>
                     @endif
