@@ -1601,3 +1601,22 @@ return view();
 //一度ルーティングを通してviewにアクセスする
 redirect()
 ```
+
+### RouteFacadesのrequestから値を取得する
+
+middleware内でrouteパラメータを取得できる
+
+```php
+//route
+Route::post('delete/{item}', [CartController::class, 'delete'])->name('cart.delete');
+
+//blade
+<form method="post" action="{{ route('users.cart.delete', ['item' => $product->id]) }}">
+@csrf
+
+//controller
+$this->middleware(function ($request, $next) {
+//productidの取得 ここで指定しているitemはRouteFacadeの{item}
+    $item = $request->route()->parameter('item');
+}
+```
