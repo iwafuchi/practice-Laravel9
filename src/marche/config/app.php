@@ -214,6 +214,7 @@ return [
         'InterventionImage' => Intervention\Image\Facades\Image::class,
         //Constants
         'ProductConstant' => App\Constants\Product::class,
+        'SortOrderConstant' => App\Constants\SortOrder::class,
     ])->toArray(),
 
 ];

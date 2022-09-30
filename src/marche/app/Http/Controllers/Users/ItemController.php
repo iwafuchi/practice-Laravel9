@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Stock;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller {
     public function __construct() {
@@ -26,8 +27,8 @@ class ItemController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        $products = Product::availableItems()->get();
+    public function index(Request $request) {
+        $products = Product::availableItems()->sortOrder($request->sort)->get();
 
         return view('users.index', compact('products'));
     }
