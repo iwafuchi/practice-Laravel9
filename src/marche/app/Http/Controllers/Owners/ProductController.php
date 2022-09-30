@@ -21,10 +21,12 @@ class ProductController extends Controller {
         $this->middleware('auth:owners');
 
         $this->middleware(function ($request, $next) {
+            //productidの取得
             $id = $request->route()->parameter('product');
             if (!is_null($id)) {
                 $productOwnerId = Product::findOrFail($id)->shop->owner->id;
                 $productId = (int)$productOwnerId;
+                //productidと認証済みユーザーのIDが同じでなかったら404画面を表示する
                 if ($productId !== Auth::id()) {
                     abort(404);
                 }
