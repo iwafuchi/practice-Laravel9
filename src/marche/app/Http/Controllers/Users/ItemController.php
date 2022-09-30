@@ -15,7 +15,7 @@ class ItemController extends Controller {
             $id = $request->route()->parameter('item');
             if (!is_null($id)) {
                 $itemId = Product::availableItems()->where('products.id', $id)->exists();
-                //productidと認証済みユーザーのIDが同じでなかったら404画面を表示する
+                //商品が未販売なら404ページを表示する
                 abort_unless($itemId, 404);
             }
             return $next($request);
