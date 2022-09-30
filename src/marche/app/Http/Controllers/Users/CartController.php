@@ -46,6 +46,13 @@ class CartController extends Controller {
         return redirect()->route('users.cart.index');
     }
 
+    /**
+     * delete function
+     * カートから商品を削除する
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function delete($id) {
         Cart::productId($id)
             ->userId(Auth::id())
