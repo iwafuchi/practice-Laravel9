@@ -1618,5 +1618,12 @@ Route::post('delete/{item}', [CartController::class, 'delete'])->name('cart.dele
 $this->middleware(function ($request, $next) {
 //productidの取得 ここで指定しているitemはRouteFacadeの{item}
     $item = $request->route()->parameter('item');
+    if (!is_null($id)) {
+        //販売中の商品を取得
+        $itemId = Product::availableItems()->where('products.id', $item)->exists();
+        //商品が未販売なら404ページを表示する
+        abort_unless($itemId, 404);
+    }
+    return $next($request);
 }
 ```
