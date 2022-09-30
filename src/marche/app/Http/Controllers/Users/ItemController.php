@@ -9,6 +9,17 @@ use App\Models\Stock;
 class ItemController extends Controller {
     public function __construct() {
         $this->middleware('auth:users');
+
+        $this->middleware(function ($request, $next) {
+            //productidの取得
+            $id = $request->route()->parameter('item');
+            if (!is_null($id)) {
+                $itemId = Product::availableItems()->where('products.id', $id)->exists();
+                //productidと認証済みユーザーのIDが同じでなかったら404画面を表示する
+                abort_unless($itemId, 404);
+            }
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
