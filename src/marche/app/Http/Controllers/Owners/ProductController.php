@@ -10,7 +10,6 @@ use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\PrimaryCategory;
 use App\Http\Requests\ProductRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
