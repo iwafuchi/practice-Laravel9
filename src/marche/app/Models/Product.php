@@ -91,19 +91,19 @@ class Product extends Model {
     }
 
     public function scopeSortOrder($query, $sortOrder) {
-        if ($sortOrder === null || $sortOrder === \SortOrderConstant::SORT_ORDER['recommend']) {
+        if ($sortOrder === null || $sortOrder === \SortOrderConstant::SORT_ORDER['recommend']['value']) {
             return $query->orderBy('sort_order', 'asc');
         }
-        if ($sortOrder === \SortOrderConstant::SORT_ORDER['higherPrice']) {
+        if ($sortOrder === \SortOrderConstant::SORT_ORDER['higherPrice']['value']) {
             return $query->orderBy('price', 'desc');
         }
-        if ($sortOrder === \SortOrderConstant::SORT_ORDER['lowerPrice']) {
+        if ($sortOrder === \SortOrderConstant::SORT_ORDER['lowerPrice']['value']) {
             return $query->orderBy('price', 'asc');
         }
-        if ($sortOrder === \SortOrderConstant::SORT_ORDER['newst']) {
+        if ($sortOrder === \SortOrderConstant::SORT_ORDER['newst']['value']) {
             return $query->orderBy('products.created_at', 'desc');
         }
-        if ($sortOrder === \SortOrderConstant::SORT_ORDER['oldest']) {
+        if ($sortOrder === \SortOrderConstant::SORT_ORDER['oldest']['value']) {
             return $query->orderBy('products.created_at', 'asc');
         }
     }

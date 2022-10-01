@@ -10,10 +10,10 @@ class SortOrder {
     const ORDER_OLDEST = '4';
 
     const SORT_ORDER = [
-        'recommend' => self::ORDER_RECOMMEND,
-        'higherPrice' => self::ORDER_HIGHER,
-        'lowerPrice' => self::ORDER_LOWER,
-        'newst' => self::ORDER_NEWST,
-        'oldest' => self::ORDER_OLDEST
+        'recommend' => ['value' => self::ORDER_RECOMMEND, 'description' => 'おすすめ順'],
+        'higherPrice' => ['value' => self::ORDER_HIGHER, 'description' => '価格の高い順'],
+        'lowerPrice' => ['value' => self::ORDER_LOWER, 'description' => '価格の低い順'],
+        'newst' => ['value' => self::ORDER_NEWST, 'description' => '新しい順'],
+        'oldest' => ['value' => self::ORDER_OLDEST, 'description' => '古い順']
     ];
 }
