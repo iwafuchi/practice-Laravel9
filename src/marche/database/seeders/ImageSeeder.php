@@ -14,14 +14,16 @@ class ImageSeeder extends Seeder {
      */
     public function run() {
         for ($i = 1; $i < 7; $i++) {
-            DB::table('images')->insert([
-                [
-                    'owner_id' => 1,
-                    'filename' => "sample${i}.jpg",
-                    'title' => null,
-                    'created_at' => '2022/01/01 00:00:00'
-                ]
-            ]);
+            for ($j = 1; $j < 7; $j++) {
+                DB::table('images')->insert([
+                    [
+                        'owner_id' => $i,
+                        'filename' => "sample${j}.jpg",
+                        'title' => null,
+                        'created_at' => '2022/01/01 00:00:00'
+                    ]
+                ]);
+            }
         }
     }
 }
