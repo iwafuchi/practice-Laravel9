@@ -28,8 +28,29 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $products = Product::availableItems()->sortOrder($request->sort)->get();
-
+        $sortType = $request->sort;
+        $sortOrder = \SortOrderConstant::SORT_ORDER;
+        $products = [];
+        //指定無しまたはおすすめ順
+        if (is_null($sortType) || $sortType === $sortOrder['recommend']['value']) {
+            $products = Product::availableItems()->orderBySortOrderASC()->get();
+        }
+        //価格の高い順
+        if ($sortType === $sortOrder['higherPrice']['value']) {
+            $products = Product::availableItems()->orderByPriceDESC()->get();
+        }
+        //価格の低い順
+        if ($sortType === $sortOrder['lowerPrice']['value']) {
+            $products = Product::availableItems()->orderByPriceASC()->get();
+        }
+        //新しい順
+        if ($sortType === $sortOrder['newst']['value']) {
+            $products = Product::availableItems()->orderByCreatedDESC()->get();
+        }
+        //古い順
+        if ($sortType === $sortOrder['oldest']['value']) {
+            $products = Product::availableItems()->orderCreatedASC()->get();
+        }
         return view('users.index', compact('products'));
     }
 
