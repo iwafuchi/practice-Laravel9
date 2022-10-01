@@ -85,13 +85,14 @@ class Product extends Model {
                 'products.price',
                 'products.sort_order as sort_order',
                 'products.information',
+                'products.created_at',
                 'secondary_categories.name as category',
                 'image1.filename as filename'
             );
     }
 
     public function scopeSortOrder($query, $sortOrder) {
-        if ($sortOrder === null || $sortOrder === \SortOrderConstant::SORT_ORDER['recommend']['value']) {
+        if (is_null($sortOrder) || $sortOrder === \SortOrderConstant::SORT_ORDER['recommend']['value']) {
             return $query->orderBy('sort_order', 'asc');
         }
         if ($sortOrder === \SortOrderConstant::SORT_ORDER['higherPrice']['value']) {
@@ -106,5 +107,54 @@ class Product extends Model {
         if ($sortOrder === \SortOrderConstant::SORT_ORDER['oldest']['value']) {
             return $query->orderBy('products.created_at', 'asc');
         }
+    }
+    /**
+     * scopeOrderBySortOrderASC function
+     * 指定無しまたはおすすめ順
+     * @param [type] $query
+     * @return void
+     */
+    public function scopeOrderBySortOrderASC($query) {
+        return $query->orderBy('sort_order', 'asc');
+    }
+
+    /**
+     * scopeOrderByPriceDESC function
+     * 価格の高い順
+     * @param [type] $query
+     * @return void
+     */
+    public function scopeOrderByPriceDESC($query) {
+        return $query->orderBy('price', 'desc');
+    }
+
+    /**
+     * scopeOrderByPriceASC function
+     * 価格の低い順
+     * @param [type] $query
+     * @return void
+     */
+    public function scopeOrderByPriceASC($query) {
+        return $query->orderBy('price', 'asc');
+    }
+
+    /**
+     * scopeOrderByCreatedDESC function
+     * 新しい順
+     * @param [type] $query
+     * @return void
+     */
+    public function scopeOrderByCreatedDESC($query) {
+        return $query->orderBy('products.created_at', 'desc');
+    }
+
+    /**
+     * scopeOrderCreatedASC function
+     * 古い順
+     * @param [type] $query
+     * @return void
+     */
+    public function scopeOrderCreatedASC($query) {
+        return $query->orderBy('products.created_at', 'asc');
     }
 }
