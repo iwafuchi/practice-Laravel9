@@ -1651,3 +1651,48 @@ $this->middleware(function ($request, $next) {
     return $next($request);
 }
 ```
+
+### リクエストパラメータの様々な受け取り方
+
+リクエストパラメータにはクエリパラメータとパスパラメータがある
+
+URL例:`http://localhost/user/profile/1?name=hoge&age=20&email=hoge@hoge.co.jp`
+
+リクエストパラメータは?name=hoge&age=20&email=hoge@hoge.co.jpを指す
+
+パスパラメータは/1を指す
+これはrouteで指定したURIパスのことである
+
+```php
+//route
+Route::post('user/{id}', [UserController::class, 'profile'])->name('user.profile');
+```
+
+```php
+//リクエストの中身は以下とする
+$request = [
+    'name' => 'hoge',
+    'age' => '20',
+    'email' => 'hoge@hoge.co.jp',
+]
+
+public function getRequest(Request $request){
+    //クエリパラメータを一つずつ取得する場合
+    $name = $request->input('name');
+    $age = $request->input('age');
+    $email = $request->input('email');
+    $tel = $request->input('tel') //存在しない場合はnullが取得される
+    $tel = $request->input('tel', 'none') //input第二引数でパラメータが存在しない場合のデフォルト値を設定可能
+
+    //動的プロパティを使用した場合は、リクエストパラメータの中で一致するものを探し、存在しない場合はルートパラメータを探しにいく
+    $name = $request->name;
+    $age = $request->age;
+    $email = $request->email;
+
+    //全てのリクエストパラメータを取得する
+    $attributes = $request->all(); //allは連想配列形式で全て取得する 基本的には後述するonlyを使用する
+    $attributes = $request->only(['name', 'age' , 'email']); //onlyは取得するパラメータを指定出来るので可読正を担保できる
+}
+```
+
+$request->all()は不正な値にもかかわらず全てを取得するのでレコードの更新を行う際は絶対に使用しないこと
