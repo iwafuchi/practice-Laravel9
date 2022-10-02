@@ -806,9 +806,33 @@ ControllerClass::withTranshed()->get(); //ゴミ箱も含め表示
 $recode->trashed() //ソフトデリートされているかの確認
 ```
 
-### ページネーション
+### pagination
 
-ページネーションについて
+1ページあたりに表示するアイテム数を制御する
+
+表示数が固定の場合
+
+```php
+//controller
+$user = User::where('active', true)->paginate('20');
+return view('user.list',compact('user'));
+
+//blade
+{{ $user->links() }}
+
+```
+
+表示数が可変の場合
+append()でページネーションに必要なパラメータを保持する
+
+```php
+//controller
+$user = User::where('active', true)->paginate($request->sort);
+return view('user.list',compact('user'));
+
+//blade
+{{ $user->append(['sort'=> \Request::get('sort')])->links() }}
+```
 
 ### Route::resourceのonlyとexcept
 
