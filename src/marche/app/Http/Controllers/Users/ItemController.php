@@ -33,23 +33,23 @@ class ItemController extends Controller {
         $products = [];
         //指定無しまたはおすすめ順
         if (is_null($sortType) || $sortType === $sortOrder['recommend']['value']) {
-            $products = Product::availableItems()->orderBySortOrderASC()->get();
+            $products = Product::availableItems()->orderBySortOrderASC()->paginate($request->pagination);
         }
         //価格の高い順
         if ($sortType === $sortOrder['higherPrice']['value']) {
-            $products = Product::availableItems()->orderByPriceDESC()->get();
+            $products = Product::availableItems()->orderByPriceDESC()->paginate($request->pagination);
         }
         //価格の低い順
         if ($sortType === $sortOrder['lowerPrice']['value']) {
-            $products = Product::availableItems()->orderByPriceASC()->get();
+            $products = Product::availableItems()->orderByPriceASC()->paginate($request->pagination);
         }
         //新しい順
         if ($sortType === $sortOrder['newst']['value']) {
-            $products = Product::availableItems()->orderByCreatedDESC()->get();
+            $products = Product::availableItems()->orderByCreatedDESC()->paginate($request->pagination);
         }
         //古い順
         if ($sortType === $sortOrder['oldest']['value']) {
-            $products = Product::availableItems()->orderCreatedASC()->get();
+            $products = Product::availableItems()->orderCreatedASC()->paginate($request->pagination);
         }
         return view('users.index', compact('products'));
     }
