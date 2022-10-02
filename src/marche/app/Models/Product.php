@@ -175,7 +175,15 @@ class Product extends Model {
         }
         return $query->where('secondary_category_id', $categoryId);
     }
-    public function scopeSearchKeyword($query, $keyword) {
+
+    /**
+     * scopeSearchKeyword function
+     * キーワードで検索する
+     * @param Builder $query
+     * @param string $keyword
+     * @return Builder
+     */
+    public function scopeSearchKeyword(Builder $query, string|null $keyword): Builder {
         if (is_null($keyword)) {
             return $query;
         }
