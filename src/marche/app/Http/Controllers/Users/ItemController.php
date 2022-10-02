@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\PrimaryCategory;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller {
@@ -28,7 +29,8 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-
+        //カテゴリーが設定されていない場合は0
+        $categoryId = $request->category ?? '0';
         //パラメータが設定されていない場合は20
         $pagination = $request->pagination ?? '20';
         $sortType = $request->sort;
@@ -37,25 +39,28 @@ class ItemController extends Controller {
 
         //指定無しまたはおすすめ順
         if (is_null($sortType) || $sortType === $sortOrder['recommend']['value']) {
-            $products = Product::availableItems()->orderBySortOrderASC()->paginate($pagination);
+            $products = Product::availableItems()->selectCategory($categoryId)->orderBySortOrderASC()->paginate($pagination);
         }
         //価格の高い順
         if ($sortType === $sortOrder['higherPrice']['value']) {
-            $products = Product::availableItems()->orderByPriceDESC()->paginate($pagination);
+            $products = Product::availableItems()->selectCategory($categoryId)->orderByPriceDESC()->paginate($pagination);
         }
         //価格の低い順
         if ($sortType === $sortOrder['lowerPrice']['value']) {
-            $products = Product::availableItems()->orderByPriceASC()->paginate($pagination);
+            $products = Product::availableItems()->selectCategory($categoryId)->orderByPriceASC()->paginate($pagination);
         }
         //新しい順
         if ($sortType === $sortOrder['newst']['value']) {
-            $products = Product::availableItems()->orderByCreatedDESC()->paginate($pagination);
+            $products = Product::availableItems()->selectCategory($categoryId)->orderByCreatedDESC()->paginate($pagination);
         }
         //古い順
         if ($sortType === $sortOrder['oldest']['value']) {
-            $products = Product::availableItems()->orderCreatedASC()->paginate($pagination);
+            $products = Product::availableItems()->selectCategory($categoryId)->orderCreatedASC()->paginate($pagination);
         }
-        return view('users.index', compact('products'));
+
+        $categories = PrimaryCategory::with('secondary')->get();
+
+        return view('users.index', compact('products', 'categories'));
     }
 
     /**
