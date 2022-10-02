@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -111,50 +112,82 @@ class Product extends Model {
     /**
      * scopeOrderBySortOrderASC function
      * 指定無しまたはおすすめ順
-     * @param [type] $query
-     * @return void
+     * @param Builder $query
+     * @return Builder
      */
-    public function scopeOrderBySortOrderASC($query) {
+    public function scopeOrderBySortOrderASC(Builder $query): Builder {
         return $query->orderBy('sort_order', 'asc');
     }
 
     /**
      * scopeOrderByPriceDESC function
      * 価格の高い順
-     * @param [type] $query
-     * @return void
+     * @param Builder $query
+     * @return Builder
      */
-    public function scopeOrderByPriceDESC($query) {
+    public function scopeOrderByPriceDESC(Builder $query): Builder {
         return $query->orderBy('price', 'desc');
     }
 
     /**
      * scopeOrderByPriceASC function
      * 価格の低い順
-     * @param [type] $query
-     * @return void
+     * @param Builder $query
+     * @return Builder
      */
-    public function scopeOrderByPriceASC($query) {
+    public function scopeOrderByPriceASC(Builder $query): Builder {
         return $query->orderBy('price', 'asc');
     }
 
     /**
      * scopeOrderByCreatedDESC function
      * 新しい順
-     * @param [type] $query
-     * @return void
+     * @param Builder $query
+     * @return Builder
      */
-    public function scopeOrderByCreatedDESC($query) {
+    public function scopeOrderByCreatedDESC(Builder $query): Builder {
         return $query->orderBy('products.created_at', 'desc');
     }
 
     /**
      * scopeOrderCreatedASC function
      * 古い順
-     * @param [type] $query
-     * @return void
+     * @param Builder $query
+     * @return Builder
      */
-    public function scopeOrderCreatedASC($query) {
+    public function scopeOrderCreatedASC(Builder $query): Builder {
         return $query->orderBy('products.created_at', 'asc');
+    }
+
+
+
+    /**
+     * scopeSelectCategory function
+     * カテゴリーを絞る
+     * @param Builder $query
+     * @param string $categoryId
+     * @return Builder
+     */
+    public function scopeSelectCategory(Builder $query, string $categoryId): Builder {
+        //全てのカテゴリーを検索する
+        if ($categoryId === '0') {
+            return $query;
+        }
+        return $query->where('secondary_category_id', $categoryId);
+    }
+    public function scopeSearchKeyword($query, $keyword) {
+        if (is_null($keyword)) {
+            return $query;
+        }
+
+        //全角スペースを半角に
+        $spaceConvert = mb_convert_kana($keyword, 's');
+        //空白で区切る
+        $keywords = preg_split('/[\s]+/', $spaceConvert, -1, PREG_SPLIT_NO_EMPTY);
+        //単語をループで回す
+        foreach ($keywords as $word) {
+            $query->where('products.name', 'like', '%' . $word . '%');
+        }
+        return $query;
     }
 }

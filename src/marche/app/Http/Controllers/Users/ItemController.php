@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\PrimaryCategory;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller {
@@ -28,30 +29,40 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $sortType = $request->sort;
+        $attributes = $request->only(['category', 'keyword', 'pagination', 'sort']);
+        //categoryが設定されていない場合は0
+        $categoryId = $attributes['category'] ?? '0';
+        $keyword = $attributes['keyword'];
+        //paginationが設定されていない場合は20
+        $pagination = $attributes['pagination'] ?? '20';
+        $sortType = $attributes['sort'];
         $sortOrder = \SortOrderConstant::SORT_ORDER;
         $products = [];
+
         //指定無しまたはおすすめ順
         if (is_null($sortType) || $sortType === $sortOrder['recommend']['value']) {
-            $products = Product::availableItems()->orderBySortOrderASC()->get();
+            $products = Product::availableItems()->selectCategory($categoryId)->searchKeyword($keyword)->orderBySortOrderASC()->paginate($pagination);
         }
         //価格の高い順
         if ($sortType === $sortOrder['higherPrice']['value']) {
-            $products = Product::availableItems()->orderByPriceDESC()->get();
+            $products = Product::availableItems()->selectCategory($categoryId)->searchKeyword($keyword)->orderByPriceDESC()->paginate($pagination);
         }
         //価格の低い順
         if ($sortType === $sortOrder['lowerPrice']['value']) {
-            $products = Product::availableItems()->orderByPriceASC()->get();
+            $products = Product::availableItems()->selectCategory($categoryId)->searchKeyword($keyword)->orderByPriceASC()->paginate($pagination);
         }
         //新しい順
         if ($sortType === $sortOrder['newst']['value']) {
-            $products = Product::availableItems()->orderByCreatedDESC()->get();
+            $products = Product::availableItems()->selectCategory($categoryId)->searchKeyword($keyword)->orderByCreatedDESC()->paginate($pagination);
         }
         //古い順
         if ($sortType === $sortOrder['oldest']['value']) {
-            $products = Product::availableItems()->orderCreatedASC()->get();
+            $products = Product::availableItems()->selectCategory($categoryId)->searchKeyword($keyword)->orderCreatedASC()->paginate($pagination);
         }
-        return view('users.index', compact('products'));
+
+        $categories = PrimaryCategory::with('secondary')->get();
+
+        return view('users.index', compact('products', 'categories'));
     }
 
     /**
