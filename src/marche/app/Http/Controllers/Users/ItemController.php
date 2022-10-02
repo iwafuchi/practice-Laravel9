@@ -30,12 +30,13 @@ class ItemController extends Controller {
      */
     public function index(Request $request) {
         $attributes = $request->only(['category', 'keyword', 'pagination', 'sort']);
+        // dd($attributes);
         //categoryが設定されていない場合は0
         $categoryId = $attributes['category'] ?? '0';
-        $keyword = $attributes['keyword'];
+        $keyword = $attributes['keyword'] ?? '';
         //paginationが設定されていない場合は20
         $pagination = $attributes['pagination'] ?? '20';
-        $sortType = $attributes['sort'];
+        $sortType = $attributes['sort'] = '0';
         $sortOrder = \SortOrderConstant::SORT_ORDER;
         $products = [];
 

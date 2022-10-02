@@ -29,18 +29,19 @@ class CartController extends Controller {
     }
 
     public function add(Request $request) {
+        $attributes = $request->only(['product_id', 'quantity']);
         $itemInCart = Cart::userId(Auth::id())
-            ->productId($request->product_id)
+            ->productId($attributes['product_id'])
             ->first();
 
         if ($itemInCart) {
-            $itemInCart->quantity += $request->quantity;
+            $itemInCart->quantity += $attributes['quantity'];
             $itemInCart->save();
         } else {
             Cart::create([
                 'user_id' => Auth::id(),
-                'product_id' => $request->product_id,
-                'quantity' => $request->quantity
+                'product_id' => $attributes['product_id'],
+                'quantity' => $attributes['quantity']
             ]);
         }
         return redirect()->route('users.cart.index');
