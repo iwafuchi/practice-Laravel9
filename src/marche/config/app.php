@@ -200,7 +200,7 @@ return [
         /**
          * Helper function
          */
-        App\Providers\HelperServicePrivider::class,
+        App\Providers\HelperServiceProvider::class,
     ],
 
     /*
