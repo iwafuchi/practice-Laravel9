@@ -196,6 +196,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\SampleServiceProvider::class,
+
+        /**
+         * Helper function
+         */
+        App\Providers\HelperServiceProvider::class,
     ],
 
     /*

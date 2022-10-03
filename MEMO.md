@@ -1666,9 +1666,7 @@ URL例:`http://localhost/user/profile/1?name=hoge&age=20&email=hoge@hoge.co.jp`
 ```php
 //route
 Route::post('user/{id}', [UserController::class, 'profile'])->name('user.profile');
-```
 
-```php
 //リクエストの中身は以下とする
 $request = [
     'name' => 'hoge',
@@ -1692,7 +1690,63 @@ public function getRequest(Request $request){
     //全てのリクエストパラメータを取得する
     $attributes = $request->all(); //allは連想配列形式で全て取得する 基本的には後述するonlyを使用する
     $attributes = $request->only(['name', 'age' , 'email']); //onlyは取得するパラメータを指定出来るので可読正を担保できる
+
+    // $request->all()は不正な値にもかかわらず全てを取得するのでレコードの更新を行う際は絶対に使用しないこと  
 }
 ```
 
-$request->all()は不正な値にもかかわらず全てを取得するのでレコードの更新を行う際は絶対に使用しないこと
+### サービスプロバイダーに自作ヘルパー関数を登録して使用する
+
+やりたかったこと  
+自作のヘルパー関数をどこからでも呼び出したい。
+ヘルパー関数は[こちらの記事](https://qiita.com/mpyw/items/a704cb900dfda0fc0331)を参考にさせて頂いた
+
+```php
+
+/**
+ * 検索用のキーワードからあらゆる空白文字で分割し，重複を除外する
+ */
+function myExtractKeywords(string $input, int $limit = -1): array {
+    return array_values(array_unique(preg_split('/[\p{Z}\p{Cc}]++/u', $input, $limit, PREG_SPLIT_NO_EMPTY)));
+}
+
+//サービスプロバイダーの作成
+php artisan make:provider HelperServiceProvider
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class HelperServiceProvider extends ServiceProvider {
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register() {
+        /**
+         * extractKeywordsで関数を呼び出すように設定、クロージャの引数に$appと$inputを設定
+         * $inputで連想配列にてクエリパラメータを取得する
+         */
+        app()->singleton('extractKeywords', function ($app, $input) {
+            return myExtractKeywords($input['keyword']);
+        });
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot() {
+        //
+    }
+}
+
+/**
+ * サービスプロバイダーを呼び出す
+ * makeの第二引数に連想配列でパラメータを渡す 
+ */
+$keywords = app()->make('extractKeywords', ['keyword' => $keyword]);
+
+```
