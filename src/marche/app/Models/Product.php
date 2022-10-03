@@ -189,11 +189,6 @@ class Product extends Model {
             return $query;
         }
 
-        //全角スペースを半角に
-        // $spaceConvert = mb_convert_kana($keyword, 's');
-        //空白で区切る
-        // $keywords = preg_split('/[\s]+/', $spaceConvert, -1, PREG_SPLIT_NO_EMPTY);
-
         $keywords = app()->make('extractKeywords', ['keyword' => $keyword]);
 
         //単語をループで回す
