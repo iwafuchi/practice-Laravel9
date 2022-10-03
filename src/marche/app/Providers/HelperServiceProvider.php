@@ -11,7 +11,7 @@ class HelperServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        app()->bind('extractKeywords', function ($app, $input) {
+        app()->singleton('extractKeywords', function ($app, $input) {
             return myExtractKeywords($input['keyword']);
         });
     }
