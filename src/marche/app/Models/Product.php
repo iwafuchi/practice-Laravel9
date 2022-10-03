@@ -176,11 +176,12 @@ class Product extends Model {
         return $query->where('secondary_category_id', $categoryId);
     }
 
+
     /**
      * scopeSearchKeyword function
      * キーワードで検索する
      * @param Builder $query
-     * @param string $keyword
+     * @param string|null $keyword
      * @return Builder
      */
     public function scopeSearchKeyword(Builder $query, string|null $keyword): Builder {
@@ -189,9 +190,12 @@ class Product extends Model {
         }
 
         //全角スペースを半角に
-        $spaceConvert = mb_convert_kana($keyword, 's');
+        // $spaceConvert = mb_convert_kana($keyword, 's');
         //空白で区切る
-        $keywords = preg_split('/[\s]+/', $spaceConvert, -1, PREG_SPLIT_NO_EMPTY);
+        // $keywords = preg_split('/[\s]+/', $spaceConvert, -1, PREG_SPLIT_NO_EMPTY);
+
+        $keywords = app()->make('extractKeywords', ['keyword' => $keyword]);
+
         //単語をループで回す
         foreach ($keywords as $word) {
             $query->where('products.name', 'like', '%' . $word . '%');
