@@ -192,8 +192,12 @@ class Product extends Model {
         $keywords = app()->make('extractKeywords', ['keyword' => $keyword]);
 
         //単語をループで回す
-        foreach ($keywords as $word) {
-            $query->where('products.name', 'like', '%' . $word . '%');
+        foreach ($keywords as $index => $word) {
+            if ($index === array_key_first($keywords)) {
+                $query->where('products.name', 'like', '%' . $word . '%');
+            } else {
+                $query->orWhere('products.name', 'like', '%' . $word . '%');
+            }
         }
         return $query;
     }
