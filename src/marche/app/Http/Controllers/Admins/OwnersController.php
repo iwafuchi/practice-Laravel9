@@ -44,12 +44,14 @@ class OwnersController extends Controller {
      */
     public function store(OwnerRegisterRequest $request) {
 
+        $attributes = $request->only(['name', 'email', 'password']);
+
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($attributes) {
                 $owner = Owner::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
+                    'name' => $attributes['name'],
+                    'email' => $attributes['email'],
+                    'password' => Hash::make($attributes['password']),
                 ]);
 
                 Shop::create([
@@ -101,11 +103,13 @@ class OwnersController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(OwnerRegisterRequest $request, $id) {
+        $attributes = $request->only(['name', 'email', 'password']);
+
         $owner = Owner::findOrFail($id);
-        $owner->name = $request->name;
-        $owner->email = $request->email;
-        $owner->password = Hash::make($request->password);
+        $owner->name = $attributes['name'];
+        $owner->email = $attributes['email'];
+        $owner->password = Hash::make($attributes['password']);
         $owner->save();
 
         return redirect()->route('admins.owners.index')
