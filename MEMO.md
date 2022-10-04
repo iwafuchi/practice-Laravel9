@@ -1750,3 +1750,20 @@ class HelperServiceProvider extends ServiceProvider {
 $keywords = app()->make('extractKeywords', ['keyword' => $keyword]);
 
 ```
+
+### パスワードのバリデーション
+
+```php
+
+<?php
+
+use Illuminate\Validation\Rules\Password;
+
+$validated = $request->validate([
+    //パスワード
+    'password' => ['required', Password::defaults()]
+
+    //確認のパスワード
+    'password' => ['required', 'confirmed', Password::defaults()],
+]);
+```
