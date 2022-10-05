@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d5c7f71a91d8e6aa3d9ab75ee8c0c7a",
+    "content-hash": "4777ba702a01f1292cde250e1a8a9658",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1946,6 +1946,77 @@
                 }
             ],
             "time": "2022-07-24T11:55:47+00:00"
+        },
+        {
+            "name": "mpyw/eloquent-has-by-non-dependent-subquery",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mpyw/eloquent-has-by-non-dependent-subquery.git",
+                "reference": "b367966185cbb7862a0c6762dc8d65a7303adb1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mpyw/eloquent-has-by-non-dependent-subquery/zipball/b367966185cbb7862a0c6762dc8d65a7303adb1d",
+                "reference": "b367966185cbb7862a0c6762dc8d65a7303adb1d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
+                "illuminate/support": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "awobaz/compoships": "^2.0.4",
+                "nilportugues/sql-query-formatter": "^1.2.2",
+                "orchestra/testbench": "*",
+                "orchestra/testbench-core": "^4.9 || ^5.9 || >=6.6",
+                "phpunit/phpunit": ">=9.5"
+            },
+            "suggest": {
+                "mpyw/eloquent-has-by-join": "Provides simple JOIN queries that do not depend optimizers"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mpyw\\EloquentHasByNonDependentSubquery\\EloquentHasByNonDependentSubqueryServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mpyw\\EloquentHasByNonDependentSubquery\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mpyw",
+                    "email": "ryosuke_i_628@yahoo.co.jp"
+                }
+            ],
+            "description": "Convert has() and whereHas() constraints to non-dependent subqueries.",
+            "keywords": [
+                "builder",
+                "database",
+                "dependent",
+                "eloquent",
+                "has",
+                "illuminate",
+                "laravel",
+                "macro",
+                "query",
+                "whereHas"
+            ],
+            "support": {
+                "issues": "https://github.com/mpyw/eloquent-has-by-non-dependent-subquery/issues",
+                "source": "https://github.com/mpyw/eloquent-has-by-non-dependent-subquery/tree/v2.0.3"
+            },
+            "time": "2022-07-14T19:22:41+00:00"
         },
         {
             "name": "nesbot/carbon",

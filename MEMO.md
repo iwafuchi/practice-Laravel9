@@ -1,18 +1,20 @@
 # 学習中のメモ
 
-後でまとめる
+後で清書する
 
-## middleware の一覧
+## 主にlaravleについて
+
+### middleware の一覧
 
 /app/Http/Kernel.php
 
-## controller の作成
+### controller の作成
 
 ``` php
 php artisan make:controller yourContoroller
 ```
 
-## コンポーネントについて
+### コンポーネントについて
 
 ### コンポーネントは 2 つある
 
@@ -141,7 +143,7 @@ class TestClassBase extends Component {
 //cacheが残って画面が更新されない場合はphp artisan view:clear
 ```
 
-## サービスコンテナについて
+### サービスコンテナについて
 
 簡単に説明するとClassをインスタンス化してくれる機能  
 依存関係を自動的に解決してくれるのでコードが簡潔に書ける  
@@ -176,7 +178,7 @@ $user = app()->make('user');
 $user->run("サービスコンテナを使用しています。");
 ```
 
-## サービスプロバイダーについて
+### サービスプロバイダーについて
 
 config/app.php内のproviders配列で読み込んでいる
 
@@ -221,7 +223,7 @@ class SampleServiceProvider extends ServiceProvider {
     }
 ```
 
-## php artisan
+### php artisan
 
 ``` php
 //modelを作成する
@@ -232,7 +234,7 @@ php artisan make:model Sample -m
 php artisan make:migration sample_migration_file
 ```
 
-## Route
+### Route
 
 ``` php
     //prefix
@@ -260,7 +262,7 @@ php artisan make:migration sample_migration_file
 });
 ```
 
-## Guard
+### Guard
 
 Laravel標準の認証機能：リクエストごとにユーザーを認証する方法
 config/auth.phpで設定する
@@ -279,7 +281,7 @@ config/auth.phpで設定する
     })->middleware('auth:users');
 ```
 
-## Middleware/Authenticate
+### Middleware/Authenticate
 
 ユーザーが未認証の場合のリダイレクト処理
 
@@ -332,7 +334,7 @@ public function boot() {
 }
 ```
 
-## Middleware/RedirectlfAuthenticated
+### Middleware/RedirectlfAuthenticated
 
 ログイン済みのユーザーがアクセスした場合のリダイレクト処理を記述する
 
@@ -401,7 +403,7 @@ class RouteServiceProvider extends ServiceProvider {
 }
 ```
 
-## RequestClass
+### RequestClass
 
 ログインフォームに入力された値からパスワードを比較し、認証する
 
@@ -633,7 +635,7 @@ php artisan migrate:fresh --seed
 php artisan make:seeder YourSeeder
 ```
 
-## リソースコントローラー CRUD(Store)
+### リソースコントローラー CRUD(Store)
 
 ```php
 
@@ -715,7 +717,7 @@ class OwnersController extends Controller
 }
 ```
 
-## フラッシュメッセージ
+### フラッシュメッセージ
 
 英語だとtoaster
 
@@ -1749,4 +1751,161 @@ class HelperServiceProvider extends ServiceProvider {
  */
 $keywords = app()->make('extractKeywords', ['keyword' => $keyword]);
 
+```
+
+### パスワードのバリデーション
+
+```php
+
+<?php
+
+use Illuminate\Validation\Rules\Password;
+
+$validated = $request->validate([
+    //パスワード
+    'password' => ['required', Password::defaults()]
+
+    //確認のパスワード
+    'password' => ['required', 'confirmed', Password::defaults()],
+]);
+```
+
+### メールを送信する
+
+mailtrapでメールの受信確認を行う  
+メールを送信するために必要な設定を確認する
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+```
+
+同期処理でメールを送信する
+
+```php
+//メール送信用のクラスを作成する
+php artisan maek:mail TestMail
+
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class TestMail extends Mailable {
+    use Queueable, SerializesModels;
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        //
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build() {
+        //buildにメールの内容を記述
+        return $this
+            ->subject('テスト送信')
+            ->view('emails.test');
+    }
+}
+
+//blade
+メール本文です。
+
+//controller
+use App\Mail\TestMail;
+
+class ItemController extends Controller {
+    public function sendMail(){
+        Mail::to('test@example.com')->send(new TestMail());
+    }
+}
+```
+
+非同期処理でメールを送信する
+
+今回はjobをdatabaseに保存する  
+queue、jobを作成し、Workerを起動する
+
+envのQUEUE_CONNECTIONをsyncからdatabaseに変更
+
+```env
+- QUEUE_CONNECTION=sync
++ QUEUE_CONNECTION=database
+```
+
+```php
+//jobsテーブルの作成 ここに未実行jobが保存される
+php artisan queue:table
+
+php artisan migrate
+
+//jobクラスの作成
+php artisan make:job SendTestMail
+
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
+
+class SendTestMail implements ShouldQueue {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle() {
+        //handleでメールを送信する
+        Mail::to('test@example.com')->send(new TestMail());
+    }
+}
+
+//controller
+use App\Jobs\SendTestMail;
+
+public function sendMail(){
+    /**
+     * 非同期でメールの送信を行う
+     * この段階ではまだメールのjobがデータベースに保存されるだけ
+     */
+    SendTestMail::dispatch();
+}
+
+//workerの起動 本番環境の場合はsupervisorで監視する必要がある
+php artisan queue:work
 ```
