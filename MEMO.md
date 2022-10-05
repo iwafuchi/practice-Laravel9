@@ -1783,6 +1783,8 @@ MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="hello@example.com"
 ```
 
+同期処理でメールを送信する
+
 ```php
 //メール送信用のクラスを作成する
 php artisan maek:mail TestMail
@@ -1824,8 +1826,84 @@ class TestMail extends Mailable {
 //blade
 メール本文です。
 
-//メールを送信する
+//controller
 use App\Mail\TestMail;
 
-Mail::to('test@example.com')->send(new TestMail());
+class ItemController extends Controller {
+    public function sendMail(){
+        Mail::to('test@example.com')->send(new TestMail());
+    }
+}
+```
+
+非同期処理でメールを送信する
+
+今回はjobをdatabaseに保存する  
+queue、jobを作成し、Workerを起動する
+
+envのQUEUE_CONNECTIONをsyncからdatabaseに変更
+
+```env
+- QUEUE_CONNECTION=sync
++ QUEUE_CONNECTION=database
+```
+
+```php
+//jobsテーブルの作成 ここに未実行jobが保存される
+php artisan queue:table
+
+php artisan migrate
+
+//jobクラスの作成
+php artisan make:job SendTestMail
+
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
+
+class SendTestMail implements ShouldQueue {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle() {
+        //handleでメールを送信する
+        Mail::to('test@example.com')->send(new TestMail());
+    }
+}
+
+//controller
+use App\Jobs\SendTestMail;
+
+public function sendMail(){
+    /**
+     * 非同期でメールの送信を行う
+     * この段階ではまだメールのjobがデータベースに保存されるだけ
+     */
+    SendTestMail::dispatch();
+}
+
+//workerの起動 本番環境の場合はsupervisorで監視する必要がある
+php artisan queue:work
 ```
