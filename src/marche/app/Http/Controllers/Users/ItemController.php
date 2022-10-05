@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\PrimaryCategory;
-use Illuminate\Http\Request;
+use App\Mail\TestMail;
 
 class ItemController extends Controller {
     public function __construct() {
@@ -29,6 +31,8 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
+
+        Mail::to('test@example.com')->send(new TestMail());
 
         $attributes = $request->only(['category', 'keyword', 'pagination', 'sort']);
 
