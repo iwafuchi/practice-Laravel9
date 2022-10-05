@@ -5,20 +5,21 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Owner;
+use Illuminate\Database\Query\JoinClause;
 
 class CartService {
     public static function getItemsInCart($items) {
         $products = [];
         foreach ($items as $item) {
             $p = Product::findOrFail($item->product_id);
-
+            \DB::enableQueryLog();
             //オーナー情報を取得
             $owner = $p->shop->owner;
-
-            //オーナー情報の連想配列の値を取得
-            // $values = array_values($owner);
-
-            // $keys = ['ownerName', 'email'];
+            $owner2 = $p->shop->join('owners', function (JoinClause $join) {
+                $join->on('shops.owner_id', '=', 'owners.id');
+            })->select('owners.name', 'owners.email')
+                ->where('owners.id', $p->shop->owner_id)->get();
+            dd($owner, $owner2, \DB::getQueryLog());
 
             //オーナー情報のキーを変更
             $ownerInfo = ['ownerName' => $owner->name, 'email' => $owner->email];

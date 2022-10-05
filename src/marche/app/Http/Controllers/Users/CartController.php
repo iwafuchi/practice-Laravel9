@@ -80,7 +80,7 @@ class CartController extends Controller {
         /////
         $items = Cart::userId(Auth::id())->get();
         $products = CartService::getItemsInCart($items);
-        dd($products);
+        // dd($products);
         /////
 
         $products = $user->products;
