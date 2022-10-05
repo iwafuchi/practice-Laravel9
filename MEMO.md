@@ -1767,3 +1767,65 @@ $validated = $request->validate([
     'password' => ['required', 'confirmed', Password::defaults()],
 ]);
 ```
+
+### メールを送信する
+
+mailtrapでメールの受信確認を行う  
+メールを送信するために必要な設定を確認する
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+```
+
+```php
+//メール送信用のクラスを作成する
+php artisan maek:mail TestMail
+
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class TestMail extends Mailable {
+    use Queueable, SerializesModels;
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        //
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build() {
+        //buildにメールの内容を記述
+        return $this
+            ->subject('テスト送信')
+            ->view('emails.test');
+    }
+}
+
+//blade
+メール本文です。
+
+//メールを送信する
+use App\Mail\TestMail;
+
+Mail::to('test@example.com')->send(new TestMail());
+```
