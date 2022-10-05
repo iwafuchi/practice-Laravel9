@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Stock;
+use App\Services\CartService;
 
 class CartController extends Controller {
 
@@ -28,6 +29,12 @@ class CartController extends Controller {
         return view('users.cart', compact('products', 'totalPrice'));
     }
 
+    /**
+     * add function
+     * 商品をカートに追加時の処理
+     * @param Request $request
+     * @return void
+     */
     public function add(Request $request) {
         $attributes = $request->only(['product_id', 'quantity']);
         $itemInCart = Cart::userId(Auth::id())
@@ -62,8 +69,20 @@ class CartController extends Controller {
         return redirect()->route('users.cart.index');
     }
 
+    /**
+     * checkout function
+     * 購入時の処理
+     * @return void
+     */
     public function checkout() {
         $user = User::findOrFail(Auth::id());
+
+        /////
+        $items = Cart::userId(Auth::id())->get();
+        $products = CartService::getItemsInCart($items);
+        dd($products);
+        /////
+
         $products = $user->products;
 
         $lineItems = [];
