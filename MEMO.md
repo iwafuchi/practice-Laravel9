@@ -1,18 +1,18 @@
 # 学習中のメモ
 
-後でまとめる
+後で清書する
 
-## middleware の一覧
+### middleware の一覧
 
 /app/Http/Kernel.php
 
-## controller の作成
+### controller の作成
 
 ``` php
 php artisan make:controller yourContoroller
 ```
 
-## コンポーネントについて
+### コンポーネントについて
 
 ### コンポーネントは 2 つある
 
@@ -141,7 +141,7 @@ class TestClassBase extends Component {
 //cacheが残って画面が更新されない場合はphp artisan view:clear
 ```
 
-## サービスコンテナについて
+### サービスコンテナについて
 
 簡単に説明するとClassをインスタンス化してくれる機能  
 依存関係を自動的に解決してくれるのでコードが簡潔に書ける  
@@ -176,7 +176,7 @@ $user = app()->make('user');
 $user->run("サービスコンテナを使用しています。");
 ```
 
-## サービスプロバイダーについて
+### サービスプロバイダーについて
 
 config/app.php内のproviders配列で読み込んでいる
 
@@ -221,7 +221,7 @@ class SampleServiceProvider extends ServiceProvider {
     }
 ```
 
-## php artisan
+### php artisan
 
 ``` php
 //modelを作成する
@@ -232,7 +232,7 @@ php artisan make:model Sample -m
 php artisan make:migration sample_migration_file
 ```
 
-## Route
+### Route
 
 ``` php
     //prefix
@@ -260,7 +260,7 @@ php artisan make:migration sample_migration_file
 });
 ```
 
-## Guard
+### Guard
 
 Laravel標準の認証機能：リクエストごとにユーザーを認証する方法
 config/auth.phpで設定する
@@ -279,7 +279,7 @@ config/auth.phpで設定する
     })->middleware('auth:users');
 ```
 
-## Middleware/Authenticate
+### Middleware/Authenticate
 
 ユーザーが未認証の場合のリダイレクト処理
 
@@ -332,7 +332,7 @@ public function boot() {
 }
 ```
 
-## Middleware/RedirectlfAuthenticated
+### Middleware/RedirectlfAuthenticated
 
 ログイン済みのユーザーがアクセスした場合のリダイレクト処理を記述する
 
@@ -401,7 +401,7 @@ class RouteServiceProvider extends ServiceProvider {
 }
 ```
 
-## RequestClass
+### RequestClass
 
 ログインフォームに入力された値からパスワードを比較し、認証する
 
@@ -633,7 +633,7 @@ php artisan migrate:fresh --seed
 php artisan make:seeder YourSeeder
 ```
 
-## リソースコントローラー CRUD(Store)
+### リソースコントローラー CRUD(Store)
 
 ```php
 
@@ -715,7 +715,7 @@ class OwnersController extends Controller
 }
 ```
 
-## フラッシュメッセージ
+### フラッシュメッセージ
 
 英語だとtoaster
 
