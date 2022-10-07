@@ -21,8 +21,6 @@
             @include('layouts.admins-navigation')
         @elseif(auth('owners')->user())
             @include('layouts.owners-navigation')
-        @elseif(auth('tests')->user())
-            @include('layouts.tests-navigation')
         @elseif(auth('users')->user())
             @include('layouts.users-navigation')
         @endif
