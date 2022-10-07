@@ -4,15 +4,13 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\Cart;
-use App\Models\Owner;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\JoinClause;
 
 class CartService {
     public static function getItemsInCart($items) {
         $products = [];
         foreach ($items as $item) {
 
+            //該当プロダクトを取得
             $product = Product::findOrFail($item->product_id);
 
             //オーナー情報を取得
@@ -21,10 +19,6 @@ class CartService {
                 ->where('owners.id', $product->shop->owner_id)
                 ->select('owners.name as ownerName', 'owners.email')
                 ->get()->toArray();
-
-
-            //オーナー情報のキーを変更
-            // $ownerInfo = ['ownerName' => $owner->name, 'email' => $owner->email];
 
             //商品情報配列
             $productInfo = Product::where('id', $item->product_id)->select('id', 'name', 'price')->get()->toArray();
