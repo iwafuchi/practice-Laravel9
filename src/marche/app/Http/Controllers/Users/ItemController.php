@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\PrimaryCategory;
-use App\Jobs\SendThanksMail;
 
 class ItemController extends Controller {
     public function __construct() {
@@ -30,8 +29,6 @@ class ItemController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-
-        SendThanksMail::dispatch();
 
         $attributes = $request->only(['category', 'keyword', 'pagination', 'sort']);
 
