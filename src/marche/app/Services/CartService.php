@@ -27,7 +27,7 @@ class CartService {
             $quantity = Cart::productId($item->product_id)->select('quantity')->get()->toArray();
 
             //配列の結合
-            $result = array_merge($productInfo[0], $ownerInfo, $quantity[0]);
+            $result = array_merge($productInfo[0], $ownerInfo[0], $quantity[0]);
 
             //配列に追加
             array_push($products, $result);

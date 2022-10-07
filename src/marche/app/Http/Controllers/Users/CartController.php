@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Stock;
 use App\Services\CartService;
 use App\Jobs\SendThanksMail;
+use App\Jobs\SendOrderedMail;
 
 class CartController extends Controller {
 
@@ -77,15 +78,7 @@ class CartController extends Controller {
      */
     public function checkout() {
 
-        /////
-        $items = Cart::userId(Auth::id())->get();
-        $products = CartService::getItemsInCart($items);
-
         $user = User::findOrFail(Auth::id());
-
-        SendThanksMail::dispatch($products, $user);
-        dd('ユーザーメール送信テスト');
-        /////
 
         $products = $user->products;
 
@@ -132,6 +125,16 @@ class CartController extends Controller {
     }
 
     public function success() {
+        $items = Cart::userId(Auth::id())->get();
+        $products = CartService::getItemsInCart($items);
+
+        $user = User::findOrFail(Auth::id());
+
+        SendThanksMail::dispatch($products, $user);
+        foreach ($products as $product) {
+            SendOrderedMail::dispatch($product, $user);
+        }
+
         Cart::userId(Auth::id())->delete();
 
         return redirect()->route('users.items.index');
