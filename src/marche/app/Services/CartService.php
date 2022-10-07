@@ -4,34 +4,30 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\Cart;
-use App\Models\Owner;
-use Illuminate\Database\Query\JoinClause;
 
 class CartService {
     public static function getItemsInCart($items) {
         $products = [];
         foreach ($items as $item) {
-            $p = Product::findOrFail($item->product_id);
-            \DB::enableQueryLog();
-            //オーナー情報を取得
-            $owner = $p->shop->owner;
-            $owner2 = $p->shop->join('owners', function (JoinClause $join) {
-                $join->on('shops.owner_id', '=', 'owners.id');
-            })->select('owners.name', 'owners.email')
-                ->where('owners.id', $p->shop->owner_id)->get();
-            dd($owner, $owner2, \DB::getQueryLog());
 
-            //オーナー情報のキーを変更
-            $ownerInfo = ['ownerName' => $owner->name, 'email' => $owner->email];
+            //該当プロダクトを取得
+            $product = Product::findOrFail($item->product_id);
+
+            //オーナー情報を取得
+            $ownerInfo = $product
+                ->shop->hasByJoin('owner')
+                ->where('owners.id', $product->shop->owner_id)
+                ->select('owners.name as ownerName', 'owners.email')
+                ->get()->toArray();
 
             //商品情報配列
-            $product = Product::where('id', $item->product_id)->select('id', 'name', 'price')->get()->toArray();
+            $productInfo = Product::where('id', $item->product_id)->select('id', 'name', 'price')->get()->toArray();
 
             //在庫数配列
             $quantity = Cart::productId($item->product_id)->select('quantity')->get()->toArray();
 
             //配列の結合
-            $result = array_merge($product[0], $ownerInfo, $quantity[0]);
+            $result = array_merge($productInfo[0], $ownerInfo[0], $quantity[0]);
 
             //配列に追加
             array_push($products, $result);
