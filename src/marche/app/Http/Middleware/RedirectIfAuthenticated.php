@@ -35,10 +35,6 @@ class RedirectIfAuthenticated {
             return redirect(RouteServiceProvider::ADMINS_HOME);
         }
 
-        if (Auth::guard((self::GUARD_TESTS))->check() && $request->routeIs('tests.*')) {
-            return redirect(RouteServiceProvider::TESTS_HOME);
-        }
-
         return $next($request);
     }
 }
