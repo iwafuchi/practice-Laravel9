@@ -1,11 +1,11 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
-                <div class="w-12">
+            <div class="w-28">
+                <a href="/">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </div>
-            </a>
+                </a>
+            </div>
         </x-slot>
 
         <!-- Validation Errors -->
