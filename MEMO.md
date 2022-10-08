@@ -1909,3 +1909,12 @@ public function sendMail(){
 //workerの起動 本番環境の場合はsupervisorで監視する必要がある
 php artisan queue:work
 ```
+
+### ログを仕込む
+
+```php
+use Illuminate\Support\Facades\Log;
+
+Log::debug('admin', $request->session()->all());
+
+```
