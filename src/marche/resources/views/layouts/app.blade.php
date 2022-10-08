@@ -17,11 +17,11 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        @if (auth('admins')->user())
+        @if (request()->is('admin*'))
             @include('layouts.admins-navigation')
-        @elseif(auth('owners')->user())
+        @elseif(request()->is('owner*'))
             @include('layouts.owners-navigation')
-        @elseif(auth('users')->user())
+        @else
             @include('layouts.users-navigation')
         @endif
 
