@@ -1,37 +1,38 @@
-version: '3'
+version: "3"
 
 services:
-  mysql:
-    build:
-      context: ./
-      dockerfile: ./docker/mysql/Dockerfile
-    container_name: practice-Larave9-mysql
-    volumes:
-      - data_store:/var/lib/mysql
+    mysql:
+        build:
+            context: ./
+            dockerfile: ./docker/mysql/Dockerfile
+        container_name: practice-Larave9-mysql
+        volumes:
+            - data_store:/var/lib/mysql
 
-  phpmyadmin:
-    depends_on:
-      - mysql
-    image: phpmyadmin/phpmyadmin
-    container_name: practice-Larave9-phpmyadmin
-    environment:
-      PMA_HOST: mysql
-    ports:
-      - "8080:80"
+    phpmyadmin:
+        depends_on:
+            - mysql
+        image: phpmyadmin/phpmyadmin
+        container_name: practice-Larave9-phpmyadmin
+        environment:
+            PMA_HOST: mysql
+        ports:
+            - "8080:80"
 
-  php-apache:
-    build:
-        context: ./
-        dockerfile: ./docker/php-apache/Dockerfile
-    container_name: practice-Larave9-php-apache
-    volumes:
-      - ./src:/var/www/html
-      - ./docker/php-apache/php/php.ini:/usr/local/etc/php/php.ini
-      - ./docker/php-apache/apache/security.conf:/etc/apache2/conf-available/security.conf
-    ports:
-      - "80:80"
-    depends_on:
-      - mysql
+    php-apache:
+        build:
+            context: ./
+            dockerfile: ./docker/php-apache/Dockerfile
+        container_name: practice-Larave9-php-apache
+        volumes:
+            - ./src:/var/www/html
+            - ./docker/php-apache/php/php.ini:/usr/local/etc/php/php.ini
+            - ./docker/php-apache/apache/security.conf:/etc/apache2/conf-available/security.conf
+            - ./docker/php-apache/supervisor/laravel-worker.conf:/etc/supervisor/conf.d/laravel-worker.conf
+        ports:
+            - "80:80"
+        depends_on:
+            - mysql
 
 volumes:
     data_store: {}
