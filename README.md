@@ -60,6 +60,9 @@ php artisan storage:linkでstorageフォルダにリンク後、storage/app/publ
 メールのテストとしてmailtrapを利用しています。
 .envにmailtrapの情報を追記して下さい。
 
+メールの送信にsupervisorを使用しています。
+デーモンの起動を行って下さい。
+
 ## 参考資料
 
 <https://readouble.com/laravel/9.x/ja/releases.html>  
