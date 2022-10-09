@@ -54,6 +54,15 @@ php artisan storage:linkでstorageフォルダにリンク後、storage/app/publ
 
 ショップの画像を表示するには、storage/app/public/shopsフォルダを作成し画像を保存する。
 
+決済のテストとしてstripeを利用しています。
+.envにstripeの情報を追記して下さい。
+
+メールのテストとしてmailtrapを利用しています。
+.envにmailtrapの情報を追記して下さい。
+
+メールの送信にsupervisorを使用しています。
+デーモンの起動を行って下さい。
+
 ## 参考資料
 
 <https://readouble.com/laravel/9.x/ja/releases.html>  
