@@ -1918,3 +1918,32 @@ use Illuminate\Support\Facades\Log;
 Log::debug('admin', $request->session()->all());
 
 ```
+
+### supervisorを使用する
+
+```txt
+supervisorをインストール
+apt-get install supervisor
+
+バージョン確認
+supervisord -v
+
+デーモンのステータス確認
+sudo service supervisor status
+
+デーモンの起動
+service supervisor start
+
+laravel-worker.confを作成する
+/etc/supervisor/laravel-worker.conf
+
+[program:laravel-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/html/marche/artisan queue:work --sleep=3 --tries=3
+autostart=true
+autorestart=true
+user=root
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/www/html/marche/storage/logs/work:er.log
+```
