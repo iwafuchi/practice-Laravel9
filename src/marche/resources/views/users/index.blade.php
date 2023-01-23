@@ -72,6 +72,10 @@
                                     </div>
                                 </a>
                             </div>
+                            <div>
+                                <a href="{{ route('users.items.show.test', ['item' => $product->id]) }}">test_link
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                     {{ $products->appends([
